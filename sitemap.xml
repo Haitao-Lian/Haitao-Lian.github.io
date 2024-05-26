@@ -2,24 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://Haitao-Lian.github.io/posts/</loc>
     <lastmod>2024-05-12T17:40:15+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
+    <loc>https://Haitao-Lian.github.io/tags/</loc>
     <lastmod>2024-05-12T17:40:15+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/%E4%B8%93%E6%8F%92%E6%9C%AC%E7%BB%8F%E9%AA%8C%E8%B4%B4/</loc>
+    <loc>https://Haitao-Lian.github.io/posts/%E4%B8%93%E6%8F%92%E6%9C%AC%E7%BB%8F%E9%AA%8C%E8%B4%B4/</loc>
     <lastmod>2024-05-12T17:40:15+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/%E5%A4%8D%E7%9B%98/</loc>
+    <loc>https://Haitao-Lian.github.io/tags/%E5%A4%8D%E7%9B%98/</loc>
     <lastmod>2024-05-12T17:40:15+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://Haitao-Lian.github.io/</loc>
     <lastmod>2024-05-12T17:40:15+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>https://Haitao-Lian.github.io/about/</loc>
     <lastmod>2024-04-10T21:08:31+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
+    <loc>https://Haitao-Lian.github.io/categories/</loc>
   </url>
 </urlset>
