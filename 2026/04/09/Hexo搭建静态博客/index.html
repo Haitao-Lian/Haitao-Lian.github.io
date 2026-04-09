@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"haitao-lian.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="搭建和部署静态博客（不包含Github创建仓库步骤）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo搭建静态博客">
+<meta property="og:url" content="http://haitao-lian.github.io/2026/04/09/Hexo%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/index.html">
+<meta property="og:site_name" content="HT&#39;s Blog">
+<meta property="og:description" content="搭建和部署静态博客（不包含Github创建仓库步骤）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://haitao-lian.github.io/images/Hexo%E9%BB%98%E8%AE%A4%E6%AC%A2%E8%BF%8E%E9%A1%B5.png">
+<meta property="article:published_time" content="2026-04-09T07:46:25.000Z">
+<meta property="article:modified_time" content="2026-04-09T07:59:36.701Z">
+<meta property="article:author" content="Leon">
+<meta property="article:tag" content="博客配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://haitao-lian.github.io/images/Hexo%E9%BB%98%E8%AE%A4%E6%AC%A2%E8%BF%8E%E9%A1%B5.png">
+
+
+<link rel="canonical" href="http://haitao-lian.github.io/2026/04/09/Hexo%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/04/09/Hexo%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/","path":"2026/04/09/Hexo搭建静态博客/","title":"Hexo搭建静态博客"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Hexo搭建静态博客 | HT's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">HT's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-hexo"><span class="nav-number">1.</span> <span class="nav-text">安装 hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">2.</span> <span class="nav-text">初始化文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%9C%8D%E5%8A%A1"><span class="nav-number">3.</span> <span class="nav-text">生成服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%81%9C%E6%AD%A2%E9%A2%84%E8%A7%88"><span class="nav-number">5.</span> <span class="nav-text">停止预览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-NexT-%E4%B8%BB%E9%A2%98"><span class="nav-number">6.</span> <span class="nav-text">安装 NexT 主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deployment-%E9%83%A8%E7%BD%B2"><span class="nav-number">7.</span> <span class="nav-text">Deployment 部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%87%E7%AD%BE%E9%A1%B5%E5%92%8C%E5%88%86%E7%B1%BB%E9%A1%B5%E8%AE%BE%E7%BD%AE"><span class="nav-number">8.</span> <span class="nav-text">标签页和分类页设置</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Leon"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Leon</p>
+  <div class="site-description" itemprop="description">Fittness</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/04/09/Hexo%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Leon">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HT's Blog">
+      <meta itemprop="description" content="Fittness">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Hexo搭建静态博客 | HT's Blog">
+      <meta itemprop="description" content="搭建和部署静态博客（不包含Github创建仓库步骤）">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Hexo搭建静态博客
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-04-09 15:46:25 / 修改时间：15:59:36" itemprop="dateCreated datePublished" datetime="2026-04-09T15:46:25+08:00">2026-04-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">技术笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">搭建和部署静态博客（不包含Github创建仓库步骤）</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>参考：<a target="_blank" rel="noopener" href="https://blog.51cto.com/u_15295608/3100034">使用github + hexo搭建个人博客_51CTO博客_github搭建个人博客</a></p>
+<p>先决条件：</p>
+<ul>
+<li>git</li>
+<li>npm</li>
+<li>配置 Github 的 ssh Key</li>
+<li>在 GitHub 上创建以用户名命名的仓库</li>
+</ul>
+<h3 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">19</span>:<span class="number">07</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span><span class="variable">$</span> mkdir hexo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    目录: D:\A_Personal_Blog\<span class="built_in">new-blog</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Mode                 LastWriteTime         Length Name</span><br><span class="line">    <span class="literal">----</span>                 <span class="literal">-------------</span>         <span class="literal">------</span> <span class="literal">----</span></span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">07</span>                hexo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="built_in">PS</span> [<span class="number">19</span>:<span class="number">07</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span><span class="variable">$</span> npm install <span class="literal">-g</span> hexo<span class="literal">-cli</span></span><br><span class="line"></span><br><span class="line">    added <span class="number">53</span> packages <span class="keyword">in</span> <span class="number">6</span>s</span><br><span class="line"></span><br><span class="line">    <span class="number">14</span> packages are looking <span class="keyword">for</span> funding</span><br><span class="line">      run `npm fund` <span class="keyword">for</span> details</span><br><span class="line">      npm notice</span><br><span class="line">      npm notice New major version of npm available! <span class="number">10.8</span>.<span class="number">2</span> -&gt; <span class="number">11.12</span>.<span class="number">1</span></span><br><span class="line">      npm notice Changelog: https://github.com/npm/<span class="built_in">cli</span>/releases/tag/v11.<span class="number">12.1</span></span><br><span class="line">      npm notice To update run: npm install <span class="literal">-g</span> npm@<span class="number">11.12</span>.<span class="number">1</span></span><br><span class="line">      npm notice</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="初始化文件夹"><a href="#初始化文件夹" class="headerlink" title="初始化文件夹"></a>初始化文件夹</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">15</span>:<span class="number">39</span>] D:\A_Personal_Blog\hexo<span class="variable">$</span> hexo init</span><br><span class="line">INFO  Cloning hexo<span class="literal">-starter</span> https://github.com/hexojs/hexo<span class="literal">-starter</span>.git</span><br><span class="line">INFO  Install dependencies</span><br><span class="line">warning hexo &gt; warehouse &gt; cuid@<span class="number">2.1</span>.<span class="number">8</span>: Cuid and other k<span class="literal">-sortable</span> and non<span class="literal">-cryptographic</span> ids (Ulid, ObjectId, KSUID, all UUIDs) are all insecure. Use @paralleldrive/cuid2 instead.</span><br><span class="line">warning hexo<span class="literal">-renderer-marked</span> &gt; jsdom &gt; abab@<span class="number">2.0</span>.<span class="number">6</span>: Use your platform<span class="string">&#x27;s native atob() and btoa() methods instead</span></span><br><span class="line"><span class="string">warning hexo-renderer-marked &gt; jsdom &gt; data-urls &gt; abab@2.0.6: Use your platform&#x27;</span>s native atob() and btoa() methods instead</span><br><span class="line">INFO  <span class="built_in">Start</span> blogging with Hexo!</span><br></pre></td></tr></table></figure>
+
+<p>可以看到文件夹内生成如下文件内容：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">19</span>:<span class="number">13</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> ll</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    目录: D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Mode                 LastWriteTime         Length Name</span><br><span class="line">    <span class="literal">----</span>                 <span class="literal">-------------</span>         <span class="literal">------</span> <span class="literal">----</span></span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                .github</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">13</span>                node_modules</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                scaffolds</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                source</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                themes</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>             <span class="number">82</span> .gitignore</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">13</span>         <span class="number">104807</span> package<span class="literal">-lock</span>.json</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>            <span class="number">615</span> package.json</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>              <span class="number">0</span> _config.landscape.yml</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>           <span class="number">2443</span> _config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成服务"><a href="#生成服务" class="headerlink" title="生成服务"></a>生成服务</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">19</span>:<span class="number">13</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> hexo g</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  <span class="built_in">Start</span> processing</span><br><span class="line">INFO  Files loaded <span class="keyword">in</span> <span class="number">362</span> ms</span><br><span class="line">INFO  Generated: archives/index.html</span><br><span class="line">INFO  Generated: archives/<span class="number">2026</span>/<span class="number">04</span>/index.html</span><br><span class="line">INFO  Generated: index.html</span><br><span class="line">INFO  Generated: archives/<span class="number">2026</span>/index.html</span><br><span class="line">INFO  Generated: fancybox/jquery.fancybox.min.css</span><br><span class="line">INFO  Generated: css/style.css</span><br><span class="line">INFO  Generated: js/script.js</span><br><span class="line">INFO  Generated: js/jquery<span class="literal">-3</span>.<span class="number">6.4</span>.min.js</span><br><span class="line">INFO  Generated: fancybox/jquery.fancybox.min.js</span><br><span class="line">INFO  Generated: css/images/banner.jpg</span><br><span class="line">INFO  Generated: <span class="number">2026</span>/<span class="number">04</span>/<span class="number">02</span>/hello<span class="literal">-world</span>/index.html</span><br><span class="line">INFO  <span class="number">11</span> files generated <span class="keyword">in</span> <span class="number">356</span> ms</span><br></pre></td></tr></table></figure>
+
+<p>之后可以看到文件夹又多了一些内容：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">19</span>:<span class="number">14</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> ll</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    目录: D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    Mode                 LastWriteTime         Length Name</span><br><span class="line">    <span class="literal">----</span>                 <span class="literal">-------------</span>         <span class="literal">------</span> <span class="literal">----</span></span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                .github</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">13</span>                node_modules</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">14</span>                public</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                scaffolds</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                source</span><br><span class="line">    d<span class="literal">-----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>                themes</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>             <span class="number">82</span> .gitignore</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">16</span>          <span class="number">21296</span> db.json</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">13</span>         <span class="number">104807</span> package<span class="literal">-lock</span>.json</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">14</span>            <span class="number">619</span> package.json</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>              <span class="number">0</span> _config.landscape.yml</span><br><span class="line">    <span class="literal">-a----</span>          <span class="number">2026</span>/<span class="number">4</span>/<span class="number">2</span>     <span class="number">19</span>:<span class="number">12</span>           <span class="number">2443</span> _config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">19</span>:<span class="number">14</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> hexo s</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  <span class="built_in">Start</span> processing</span><br><span class="line">INFO  Hexo is running at http://localhost:<span class="number">4000</span>/ . Press Ctrl+C to stop.</span><br><span class="line">INFO  See you again                <span class="comment"># Ctrl+c 暂停</span></span><br></pre></td></tr></table></figure>
+
+<p>访问 <code>http://localhost:4000</code> 查看预览效果：<br><img src="/images/Hexo%E9%BB%98%E8%AE%A4%E6%AC%A2%E8%BF%8E%E9%A1%B5.png" alt="Hexo默认欢迎页"></p>
+<h3 id="停止预览"><a href="#停止预览" class="headerlink" title="停止预览"></a>停止预览</h3><p>按下 CTRL-C</p>
+<p>重新预览还是那样：<code>hexo s</code></p>
+<h3 id="安装-NexT-主题"><a href="#安装-NexT-主题" class="headerlink" title="安装 NexT 主题"></a>安装 NexT 主题</h3><p>NexT 文档： <a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/getting-started/#NexT-Installation">https://theme-next.js.org/docs/getting-started/#NexT-Installation</a></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">19</span>:<span class="number">16</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> npm install hexo<span class="literal">-theme-next</span></span><br><span class="line"></span><br><span class="line">added <span class="number">2</span> packages <span class="keyword">in</span> <span class="number">2</span>s</span><br><span class="line"></span><br><span class="line"><span class="number">39</span> packages are looking <span class="keyword">for</span> funding</span><br><span class="line">  run `npm fund` <span class="keyword">for</span> details</span><br></pre></td></tr></table></figure>
+
+<h3 id="Deployment-部署"><a href="#Deployment-部署" class="headerlink" title="Deployment 部署"></a>Deployment 部署</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装 hexo-deployer-git</span></span><br><span class="line"><span class="built_in">PS</span> [<span class="number">02</span>:<span class="number">05</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> npm install hexo<span class="literal">-deployer-git</span> <span class="literal">--save</span></span><br><span class="line"></span><br><span class="line">added <span class="number">16</span> packages <span class="keyword">in</span> <span class="number">4</span>s</span><br><span class="line"></span><br><span class="line"><span class="number">45</span> packages are looking <span class="keyword">for</span> funding</span><br><span class="line">run `npm fund` <span class="keyword">for</span> details</span><br></pre></td></tr></table></figure>
+
+<p>修改配置文件 <code>_config.yml</code>：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:yourname/yourname.github.io.git</span>   <span class="comment">#注意github.com之后是冒号：</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<br>
+一键部署：
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo clean      <span class="comment"># Remove generated files and cache.</span></span><br><span class="line">hexo generate   <span class="comment"># Generate static files.</span></span><br><span class="line">hexo deploy     <span class="comment"># Deploy your website.</span></span><br></pre></td></tr></table></figure>
+
+<p>Done! 部署的问题到此完毕，关于配置文件的设置方面就不做笔记了，教程已经非常详细了，感谢前辈们！<br>NexT 主题文档 <a target="_blank" rel="noopener" href="https://theme-next.js.org/docs/getting-started/">https://theme-next.js.org/docs/getting-started/</a><br>Hexo 配置文档 <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/configuration">https://hexo.io/zh-cn/docs/configuration</a></p>
+<h3 id="标签页和分类页设置"><a href="#标签页和分类页设置" class="headerlink" title="标签页和分类页设置"></a>标签页和分类页设置</h3><p>标签页添加：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加新页面</span></span><br><span class="line"><span class="built_in">PS</span> [<span class="number">00</span>:<span class="number">20</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> hexo new page tags</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Created: D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo\source\tags\index.md</span><br><span class="line"><span class="built_in">PS</span> [<span class="number">00</span>:<span class="number">21</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> vim .\source\tags\index.md</span><br><span class="line"></span><br><span class="line"><span class="literal">---</span></span><br><span class="line">title: tags</span><br><span class="line">date: <span class="number">2026</span><span class="literal">-04-08</span> <span class="number">00</span>:<span class="number">21</span>:<span class="number">29</span></span><br><span class="line"><span class="built_in">type</span>: tags      <span class="comment"># 设置页面类型</span></span><br><span class="line"><span class="literal">---</span></span><br></pre></td></tr></table></figure>
+
+<p>在 <code>_config.next.yml</code> 文件里添加标签页：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">menu:  </span><br><span class="line">  home: / || fa fa-home  </span><br><span class="line">  ...</span><br><span class="line">  tags: /tags/ || fa fa-tags</span><br></pre></td></tr></table></figure>
+<p>分类页和标签页类似（以及“关于”页面），只需将 <code>tags</code> 替换为 <code>categories</code> 即可。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>Leon
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://haitao-lian.github.io/2026/04/09/Hexo%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/" title="Hexo搭建静态博客">http://haitao-lian.github.io/2026/04/09/Hexo搭建静态博客/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <span class="social-link">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </span>
+
+          <img class="social-item-img" src="/images/wechat_channel.png">
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AE/" rel="tag"><i class="fa fa-tag"></i> 博客配置</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/09/Swap%E5%88%86%E5%8C%BA/" rel="prev" title="Swap分区">
+                  <i class="fa fa-angle-left"></i> Swap分区
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2026/04/09/Hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/" rel="next" title="Hexo发布文章">
+                  Hexo发布文章 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-dumbbell"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Leon</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>

@@ -20,28 +20,29 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"haitao-lian.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="Ubuntu 默认无法直接用 su root 登录 root 用户，原因是为了安全，默认给 root 设置了无密码状态，无密码则无法登录。不过可以用 sudo -i&#x2F;sudo su 来登录，它只需要输入当前用户的密码即可执行（对于安装系统时创建的用户是这样，这种用户默认在 sudo 组里边）。">
+    <meta name="description" content="文章发布、图片插入以及模板设置">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ubuntu默认不能root登录">
-<meta property="og:url" content="http://haitao-lian.github.io/2026/04/05/Ubuntu%E9%BB%98%E8%AE%A4%E4%B8%8D%E8%83%BDroot%E7%99%BB%E5%BD%95/index.html">
+<meta property="og:title" content="Hexo发布文章">
+<meta property="og:url" content="http://haitao-lian.github.io/2026/04/09/Hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/index.html">
 <meta property="og:site_name" content="HT&#39;s Blog">
-<meta property="og:description" content="Ubuntu 默认无法直接用 su root 登录 root 用户，原因是为了安全，默认给 root 设置了无密码状态，无密码则无法登录。不过可以用 sudo -i&#x2F;sudo su 来登录，它只需要输入当前用户的密码即可执行（对于安装系统时创建的用户是这样，这种用户默认在 sudo 组里边）。">
+<meta property="og:description" content="文章发布、图片插入以及模板设置">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-04-05T15:19:59.000Z">
-<meta property="article:modified_time" content="2026-04-07T16:11:43.587Z">
+<meta property="og:image" content="http://haitao-lian.github.io/images/%E4%BF%AE%E6%94%B9%E6%A8%A1%E6%9D%BF%E6%BC%94%E7%A4%BA.png">
+<meta property="article:published_time" content="2026-04-09T08:05:54.000Z">
+<meta property="article:modified_time" content="2026-04-09T08:11:25.567Z">
 <meta property="article:author" content="Leon">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="用户管理">
+<meta property="article:tag" content="博客配置">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://haitao-lian.github.io/images/%E4%BF%AE%E6%94%B9%E6%A8%A1%E6%9D%BF%E6%BC%94%E7%A4%BA.png">
 
 
-<link rel="canonical" href="http://haitao-lian.github.io/2026/04/05/Ubuntu%E9%BB%98%E8%AE%A4%E4%B8%8D%E8%83%BDroot%E7%99%BB%E5%BD%95/">
+<link rel="canonical" href="http://haitao-lian.github.io/2026/04/09/Hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/04/05/Ubuntu%E9%BB%98%E8%AE%A4%E4%B8%8D%E8%83%BDroot%E7%99%BB%E5%BD%95/","path":"2026/04/05/Ubuntu默认不能root登录/","title":"Ubuntu默认不能root登录"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/04/09/Hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/","path":"2026/04/09/Hexo发布文章/","title":"Hexo发布文章"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>Ubuntu默认不能root登录 | HT's Blog</title>
+<title>Hexo发布文章 | HT's Blog</title>
   
 
 
@@ -130,7 +131,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%A0%E7%A7%8D%E5%88%87%E6%8D%A2%E5%88%B0-root-%E6%9D%83%E9%99%90%E7%9A%84%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E5%AF%B9%E6%AF%94"><span class="nav-number">1.</span> <span class="nav-text">几种切换到 root 权限的常用命令对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE-root-%E5%AF%86%E7%A0%81"><span class="nav-number">2.</span> <span class="nav-text">设置 root 密码</span></a></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%96%87%E7%AB%A0"><span class="nav-number">1.</span> <span class="nav-text">创建文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%BE%91%E6%96%87%E7%AB%A0"><span class="nav-number">2.</span> <span class="nav-text">编辑文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E9%A2%84%E8%A7%88"><span class="nav-number">3.</span> <span class="nav-text">本地预览</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87"><span class="nav-number">4.</span> <span class="nav-text">插入图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%A8%A1%E6%9D%BF"><span class="nav-number">5.</span> <span class="nav-text">设置模板</span></a></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -186,7 +187,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/04/05/Ubuntu%E9%BB%98%E8%AE%A4%E4%B8%8D%E8%83%BDroot%E7%99%BB%E5%BD%95/">
+    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/04/09/Hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -199,12 +200,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="Ubuntu默认不能root登录 | HT's Blog">
-      <meta itemprop="description" content="">
+      <meta itemprop="name" content="Hexo发布文章 | HT's Blog">
+      <meta itemprop="description" content="文章发布、图片插入以及模板设置">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ubuntu默认不能root登录
+          Hexo发布文章
         </h1>
 
         <div class="post-meta-container">
@@ -214,15 +215,9 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
+      
 
-      <time title="创建时间：2026-04-05 23:19:59" itemprop="dateCreated datePublished" datetime="2026-04-05T23:19:59+08:00">2026-04-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2026-04-08 00:11:43" itemprop="dateModified" datetime="2026-04-08T00:11:43+08:00">2026-04-08</time>
+      <time title="创建时间：2026-04-09 16:05:54 / 修改时间：16:11:25" itemprop="dateCreated datePublished" datetime="2026-04-09T16:05:54+08:00">2026-04-09</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -237,52 +232,29 @@
   
 </div>
 
+            <div class="post-description">文章发布、图片插入以及模板设置</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>Ubuntu 默认无法直接用 <code>su root</code> 登录 root 用户，原因是为了安全，默认给 root 设置了无密码状态，无密码则无法登录。<br>不过可以用 <code>sudo -i/sudo su</code> 来登录，它只需要输入当前用户的密码即可执行（对于安装系统时创建的用户是这样，这种用户默认在 sudo 组里边）。</p>
-<span id="more"></span>
+    <div class="post-body" itemprop="articleBody"><p>参考链接： <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/writing">https://hexo.io/zh-cn/docs/writing</a></p>
+<h3 id="创建文章"><a href="#创建文章" class="headerlink" title="创建文章"></a>创建文章</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">23</span>:<span class="number">12</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> hexo new <span class="string">&quot;filename&quot;</span></span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Created: D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo\source\_posts\filename.md</span><br></pre></td></tr></table></figure>
+
+<p>之后都是放在 <code>source</code> 文件夹统一管理。</p>
+<h3 id="编辑文章"><a href="#编辑文章" class="headerlink" title="编辑文章"></a>编辑文章</h3><figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">23</span>:<span class="number">19</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> vim .\source\_posts\filename.md</span><br><span class="line"></span><br><span class="line"><span class="literal">---</span></span><br><span class="line">title: filename</span><br><span class="line">date: <span class="number">2026</span><span class="literal">-04-05</span> <span class="number">23</span>:<span class="number">19</span>:<span class="number">59</span></span><br><span class="line">categories:</span><br><span class="line">  - 技术笔记</span><br><span class="line">tags:</span><br><span class="line">  - Linux</span><br><span class="line">  - 用户管理</span><br><span class="line"><span class="literal">---</span></span><br><span class="line">【正文】</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：categories 分类是按顺序形成分类和子分类的！但 tags 的出现顺序则不重要。</p>
+<h3 id="本地预览"><a href="#本地预览" class="headerlink" title="本地预览"></a>本地预览</h3><p>这一步在部署的时候就有了，这里复习一下。嘿嘿 ~</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">PS</span> [<span class="number">00</span>:<span class="number">07</span>] D:\A_Personal_Blog\<span class="built_in">new-blog</span>\hexo<span class="variable">$</span> hexo clean</span><br><span class="line">INFO  Validating config</span><br><span class="line">INFO  Deleted database.</span><br><span class="line">INFO  Deleted public folder.</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
-<h3 id="几种切换到-root-权限的常用命令对比"><a href="#几种切换到-root-权限的常用命令对比" class="headerlink" title="几种切换到 root 权限的常用命令对比"></a>几种切换到 root 权限的常用命令对比</h3><ol>
-<li><strong><code>sudo -i</code></strong><ul>
-<li>设计用来获得 <code>root</code> 的完整登录环境，相当于 <code>root</code> 亲自登录。</li>
-<li>会执行 <code>root</code> 的 <code>.bashrc</code>、<code>.bash_profile</code> 等，且 <code>PATH</code> 包含 <code>/sbin:/usr/sbin</code> 等系统管理命令的路径。</li>
-<li>工作目录变为 <code>root</code> 的家目录（通常是 <code>/root</code>）。</li>
-<li><strong>最安全、最标准</strong>的做法。</li>
-</ul>
-</li>
-<li><strong><code>sudo su -</code></strong><ul>
-<li>先通过 <code>sudo</code> 提权，再调用 <code>su -</code>（即 <code>su --login</code>）。效果与 <code>sudo -i</code> <strong>几乎完全一样</strong>。</li>
-<li>比 <code>sudo -i</code> 多启动一个 <code>su</code> 进程，略低效，但结果相同。</li>
-</ul>
-</li>
-<li><strong><code>sudo su</code></strong><ul>
-<li>缺少 <code>-</code>（或 <code>--login</code>），所以 <code>su</code> 只切换 UID，<strong>不切换环境</strong>。</li>
-<li>你仍然停留在原来的目录，并且环境变量（如 <code>PATH</code>）还是普通用户的。</li>
-<li>可能导致执行系统管理命令时提示 <code>command not found</code>（例如 <code>ifconfig</code>、<code>fdisk</code> 等需要 <code>/sbin</code> 路径）。</li>
-<li><strong>不推荐</strong>用于日常管理。</li>
-</ul>
-</li>
-</ol>
-<p>总结:</p>
-<ul>
-<li><strong>想完全变成 root 并拥有正确环境</strong>：用 <code>sudo -i</code>。</li>
-<li><strong>只想获得 root 权限但保持当前目录和变量</strong>：用 <code>sudo su</code>（但注意可能缺路径）。</li>
-<li><strong><code>sudo su -</code></strong> 是<strong>老派</strong>写法，效果同 <code>sudo -i</code>，但更啰嗦。</li>
-</ul>
-<h3 id="设置-root-密码"><a href="#设置-root-密码" class="headerlink" title="设置 root 密码"></a>设置 root 密码</h3><p>如果想设置 root 用户的密码，下次直接 root 用户登录，可以参考以下方法：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 设置 root 用户密码</span></span><br><span class="line"><span class="built_in">sudo</span> passwd root</span><br><span class="line"><span class="comment"># 启用 root 用户登录</span></span><br><span class="line"><span class="built_in">sudo</span> usermod -s /bin/bash root</span><br></pre></td></tr></table></figure>
-
-<p>本文内容参考自：</p>
-<ul>
-<li>《鸟哥的 Linux 私房菜》</li>
-<li>Gemini 3.1 Pro</li>
-<li><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1650512">Ubuntu root用户默认无密码及设置密码启用登录-开发者社区-阿里云</a></li>
-</ul>
+<h3 id="插入图片"><a href="#插入图片" class="headerlink" title="插入图片"></a>插入图片</h3><p>参考链接： <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/asset-folders">https://hexo.io/zh-cn/docs/asset-folders</a><br>在 <code>source</code> 文件夹下创建 <code>images</code> 文件夹，这里存放图片。文章内的图片就用这种格式插入：<br> <code>![](/images/image.jpg)</code></p>
+<h3 id="设置模板"><a href="#设置模板" class="headerlink" title="设置模板"></a>设置模板</h3><p>方便你每次新建的文章不需要去修改文章头部的 yaml 元数据配置。<br>在 <code>scaffolds</code> 文件夹下修改 <code>post.md</code> 文件即可！<br><img src="/images/%E4%BF%AE%E6%94%B9%E6%A8%A1%E6%9D%BF%E6%BC%94%E7%A4%BA.png" alt="修改模板演示"></p>
+<blockquote>
+<p>page 是类似标签、分类页<br>draft 就是草稿了。</p>
+</blockquote>
 
     </div>
 
@@ -300,7 +272,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://haitao-lian.github.io/2026/04/05/Ubuntu%E9%BB%98%E8%AE%A4%E4%B8%8D%E8%83%BDroot%E7%99%BB%E5%BD%95/" title="Ubuntu默认不能root登录">http://haitao-lian.github.io/2026/04/05/Ubuntu默认不能root登录/</a>
+      <a href="http://haitao-lian.github.io/2026/04/09/Hexo%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/" title="Hexo发布文章">http://haitao-lian.github.io/2026/04/09/Hexo发布文章/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -328,19 +300,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
-              <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" rel="tag"><i class="fa fa-tag"></i> 用户管理</a>
+              <a href="/tags/%E5%8D%9A%E5%AE%A2%E9%85%8D%E7%BD%AE/" rel="tag"><i class="fa fa-tag"></i> 博客配置</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
+                <a href="/2026/04/09/Hexo%E6%90%AD%E5%BB%BA%E9%9D%99%E6%80%81%E5%8D%9A%E5%AE%A2/" rel="prev" title="Hexo搭建静态博客">
+                  <i class="fa fa-angle-left"></i> Hexo搭建静态博客
+                </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/04/09/dpkg-vs-apt/" rel="next" title="dpkg vs apt">
-                  dpkg vs apt <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
