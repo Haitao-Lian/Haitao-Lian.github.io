@@ -20,28 +20,27 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"haitao-lian.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
 
-    <meta name="description" content="本文主要记录了两者之间的区别和应用。">
+    <meta name="description" content="分组复用即是将 s&#x2F;A&#x2F;B&#x2F;g 中 A 的内容利用 \(n\) 分为若干组，在 B 中使用 \n 来指代第 n 组的功能。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="dpkg vs apt">
-<meta property="og:url" content="http://haitao-lian.github.io/2026/04/09/dpkg-vs-apt/index.html">
+<meta property="og:title" content="vim正则替换——分组复用">
+<meta property="og:url" content="http://haitao-lian.github.io/2026/04/13/vim%E6%AD%A3%E5%88%99%E6%9B%BF%E6%8D%A2%E2%80%94%E2%80%94%E5%88%86%E7%BB%84%E5%A4%8D%E7%94%A8/index.html">
 <meta property="og:site_name" content="HT&#39;s Blog">
-<meta property="og:description" content="本文主要记录了两者之间的区别和应用。">
+<meta property="og:description" content="分组复用即是将 s&#x2F;A&#x2F;B&#x2F;g 中 A 的内容利用 \(n\) 分为若干组，在 B 中使用 \n 来指代第 n 组的功能。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-04-09T07:16:50.000Z">
-<meta property="article:modified_time" content="2026-04-09T07:30:15.124Z">
+<meta property="article:published_time" content="2026-04-12T18:26:29.000Z">
+<meta property="article:modified_time" content="2026-04-12T18:28:09.959Z">
 <meta property="article:author" content="HT">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="软件安装">
+<meta property="article:tag" content="Vimx">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://haitao-lian.github.io/2026/04/09/dpkg-vs-apt/">
+<link rel="canonical" href="http://haitao-lian.github.io/2026/04/13/vim%E6%AD%A3%E5%88%99%E6%9B%BF%E6%8D%A2%E2%80%94%E2%80%94%E5%88%86%E7%BB%84%E5%A4%8D%E7%94%A8/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/04/09/dpkg-vs-apt/","path":"2026/04/09/dpkg-vs-apt/","title":"dpkg vs apt"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/04/13/vim%E6%AD%A3%E5%88%99%E6%9B%BF%E6%8D%A2%E2%80%94%E2%80%94%E5%88%86%E7%BB%84%E5%A4%8D%E7%94%A8/","path":"2026/04/13/vim正则替换——分组复用/","title":"vim正则替换——分组复用"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>dpkg vs apt | HT's Blog</title>
+<title>vim正则替换——分组复用 | HT's Blog</title>
   
 
 
@@ -185,7 +184,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/04/09/dpkg-vs-apt/">
+    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/04/13/vim%E6%AD%A3%E5%88%99%E6%9B%BF%E6%8D%A2%E2%80%94%E2%80%94%E5%88%86%E7%BB%84%E5%A4%8D%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -198,12 +197,12 @@
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="dpkg vs apt | HT's Blog">
-      <meta itemprop="description" content="本文主要记录了两者之间的区别和应用。">
+      <meta itemprop="name" content="vim正则替换——分组复用 | HT's Blog">
+      <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          dpkg vs apt
+          vim正则替换——分组复用
         </h1>
 
         <div class="post-meta-container">
@@ -215,7 +214,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2026-04-09 15:16:50 / 修改时间：15:30:15" itemprop="dateCreated datePublished" datetime="2026-04-09T15:16:50+08:00">2026-04-09</time>
+      <time title="创建时间：2026-04-13 02:26:29 / 修改时间：02:28:09" itemprop="dateCreated datePublished" datetime="2026-04-13T02:26:29+08:00">2026-04-13</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -230,49 +229,23 @@
   
 </div>
 
-            <div class="post-description">本文主要记录了两者之间的区别和应用。</div>
         </div>
       </header>
 
     
     
     
-    <div class="post-body" itemprop="articleBody"><p>dpkg（Debian Package）和 apt 的关系就相当于 CentOS 中 rpm 和 yum 的关系。</p>
-<p>前者是通关本地的 <code>.deb</code> 或 <code>.rpm</code> 文件来安装程序，是底层的包管理工具。<br>后者需要联网从远程仓库搜索、下载、安装软件。底层调用的其实是 <code>dpkg</code>。</p>
-<table>
-<thead>
-<tr>
-<th align="center">特性</th>
-<th align="center">dpkg</th>
-<th align="center">apt</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">主要职责</td>
-<td align="center">安装、卸载、构建本地的 <code>.deb</code> 文件</td>
-<td align="center">从远程仓库搜索、下载、安装软件包</td>
-</tr>
-<tr>
-<td align="center">依赖处理</td>
-<td align="center">不解决依赖问题。如果缺少依赖，安装会直接报错中止</td>
-<td align="center">自动解决依赖。会自动下载并安装所有缺失的相关包</td>
-</tr>
-<tr>
-<td align="center">工作网络</td>
-<td align="center">离线（处理本地文件）</td>
-<td align="center">在线（需要联网的软件源镜像站</td>
-</tr>
-<tr>
-<td align="center">常用命令</td>
-<td align="center"><code>dpkg -i package.deb</code></td>
-<td align="center"><code>apt install package_name</code></td>
-</tr>
-<tr>
-<td align="center">CentOS对标</td>
-<td align="center">&#96;rpm -ivh package.rpm</td>
-<td align="center">&#96;yum install package_name</td>
-</tr>
-</tbody></table>
+    <div class="post-body" itemprop="articleBody"><p>分组复用即是将 <code>s/A/B/g</code> 中 A 的内容利用 <code>\(n\)</code> 分为若干组，在 B 中使用 <code>\n</code> 来指代第 n 组的功能。</p>
+<span id="more"></span>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">2026年4月13日</span><br><span class="line">2026年4月1日</span><br><span class="line">2026年4月12日</span><br><span class="line">:%s/\(2026\)年\(.*\)月\(.*\)日/\1-\2-\3/g</span><br><span class="line"></span><br><span class="line">2026-4-13</span><br><span class="line">2026-4-1</span><br><span class="line">2026-4-12</span><br></pre></td></tr></table></figure>
+
+<p>拓展：</p>
+<ul>
+<li><code>.*</code> 是由 <code>.</code>（匹配任意单个字符）和 <code>*</code>（签名的字符重复 0 次或多次）组成的。这是一种<strong>贪婪匹配</strong>，会尽可能匹配最长的内容，如果匹配的行里出现了两次“月”字，那么 <code>*</code> 就会重复到最后一个“月”字结束。</li>
+<li><strong>非贪婪匹配</strong>可以使用 <code>.\{-}</code> 代替 <code>.*</code></li>
+<li><code>&amp;</code> 可以方便替换。这个字符代表前面匹配到的全部内容。</li>
+</ul>
 
     </div>
 
@@ -290,7 +263,7 @@
   </li>
   <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="http://haitao-lian.github.io/2026/04/09/dpkg-vs-apt/" title="dpkg vs apt">http://haitao-lian.github.io/2026/04/09/dpkg-vs-apt/</a>
+      <a href="http://haitao-lian.github.io/2026/04/13/vim%E6%AD%A3%E5%88%99%E6%9B%BF%E6%8D%A2%E2%80%94%E2%80%94%E5%88%86%E7%BB%84%E5%A4%8D%E7%94%A8/" title="vim正则替换——分组复用">http://haitao-lian.github.io/2026/04/13/vim正则替换——分组复用/</a>
   </li>
   <li class="post-copyright-license">
       <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -318,22 +291,18 @@
 </div>
 
           <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
-              <a href="/tags/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" rel="tag"><i class="fa fa-tag"></i> 软件安装</a>
+              <a href="/tags/Vimx/" rel="tag"><i class="fa fa-tag"></i> Vimx</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2026/04/05/Ubuntu%E9%BB%98%E8%AE%A4%E4%B8%8D%E8%83%BDroot%E7%99%BB%E5%BD%95/" rel="prev" title="Ubuntu默认不能root登录">
-                  <i class="fa fa-angle-left"></i> Ubuntu默认不能root登录
+                <a href="/2026/04/10/%E5%A4%8D%E4%B9%A0Linux%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90/" rel="prev" title="复习Linux文件权限">
+                  <i class="fa fa-angle-left"></i> 复习Linux文件权限
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2026/04/09/Swap%E5%88%86%E5%8C%BA/" rel="next" title="Swap分区">
-                  Swap分区 <i class="fa fa-angle-right"></i>
-                </a>
             </div>
           </div>
     </footer>
