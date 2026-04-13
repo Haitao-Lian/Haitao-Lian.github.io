@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"haitao-lian.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="《基于 LNMP 架构的企业级动态博客系统全流程运维与优化》参考链接：LNMP&#x2F;LNAMP 架构部署实战：从环境搭建到 Discuz 论坛与动静分离实现 架构组成：Ubuntu 22.04（腾讯云轻量应用服务器）+ Nginx + mysql 8.0 + PHP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于LNMP架构搭建WordPress博客">
+<meta property="og:url" content="http://haitao-lian.github.io/2026/04/13/%E5%9F%BA%E4%BA%8ELNMP%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BAWordPress%E5%8D%9A%E5%AE%A2/index.html">
+<meta property="og:site_name" content="HT&#39;s Blog">
+<meta property="og:description" content="《基于 LNMP 架构的企业级动态博客系统全流程运维与优化》参考链接：LNMP&#x2F;LNAMP 架构部署实战：从环境搭建到 Discuz 论坛与动静分离实现 架构组成：Ubuntu 22.04（腾讯云轻量应用服务器）+ Nginx + mysql 8.0 + PHP">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://haitao-lian.github.io/images/wp%E6%AC%A2%E8%BF%8E%E9%A1%B5.png">
+<meta property="og:image" content="http://haitao-lian.github.io/images/wp%E5%AF%86%E7%A0%81%E5%87%BA%E9%94%99.png">
+<meta property="article:published_time" content="2026-04-13T14:36:28.000Z">
+<meta property="article:modified_time" content="2026-04-13T15:52:47.790Z">
+<meta property="article:author" content="HT">
+<meta property="article:tag" content="LNMP">
+<meta property="article:tag" content="WordPress">
+<meta property="article:tag" content="服务搭建">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://haitao-lian.github.io/images/wp%E6%AC%A2%E8%BF%8E%E9%A1%B5.png">
+
+
+<link rel="canonical" href="http://haitao-lian.github.io/2026/04/13/%E5%9F%BA%E4%BA%8ELNMP%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BAWordPress%E5%8D%9A%E5%AE%A2/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/04/13/%E5%9F%BA%E4%BA%8ELNMP%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BAWordPress%E5%8D%9A%E5%AE%A2/","path":"2026/04/13/基于LNMP架构搭建WordPress博客/","title":"基于LNMP架构搭建WordPress博客"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>基于LNMP架构搭建WordPress博客 | HT's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">HT's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-1-%E9%A1%B9%E7%9B%AE%E5%89%8D%E7%BD%AE%E5%87%86%E5%A4%87%E4%B8%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">阶段 1 项目前置准备与服务器初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%A2%E6%BA%90%E4%B8%8E%E6%9B%B4%E6%96%B0"><span class="nav-number">1.1.</span> <span class="nav-text">换源与更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7"><span class="nav-number">1.2.</span> <span class="nav-text">安装工具</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%A0%B8%E5%BF%83%E9%85%8D%E7%BD%AE%E6%A0%87%E5%87%86%E5%8C%96"><span class="nav-number">1.3.</span> <span class="nav-text">系统核心配置标准化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="nav-number">1.3.1.</span> <span class="nav-text">配置主机名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5"><span class="nav-number">1.3.2.</span> <span class="nav-text">配置时间同步</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E9%97%AD-swap-%E5%88%86%E5%8C%BA"><span class="nav-number">1.3.3.</span> <span class="nav-text">关闭 swap 分区</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E4%B8%8E-SSH-%E5%AE%89%E5%85%A8%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">1.4.</span> <span class="nav-text">防火墙与 SSH 安全初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E9%85%8D%E7%BD%AE"><span class="nav-number">1.4.1.</span> <span class="nav-text">防火墙配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ssh-%E6%9C%8D%E5%8A%A1%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA"><span class="nav-number">1.4.2.</span> <span class="nav-text">ssh 服务安全加固</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5-2-LNMP-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6%E5%AE%89%E8%A3%85%E4%B8%8E%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">阶段 2 LNMP 核心组件安装与基础配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-Nginx"><span class="nav-number">2.1.</span> <span class="nav-text">安装 Nginx</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL-%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">MySQL 的安装与初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-%E5%AE%89%E8%A3%85"><span class="nav-number">2.2.1.</span> <span class="nav-text">MySQL 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%A5%E9%94%99%EF%BC%9AGPG-%E5%AF%86%E9%92%A5%E8%BF%87%E6%9C%9F"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">报错：GPG 密钥过期</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85-MySQL-%E5%B9%B6%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">2.2.2.</span> <span class="nav-text">安装 MySQL 并初始化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP-%E5%AE%89%E8%A3%85"><span class="nav-number">2.3.</span> <span class="nav-text">PHP 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%B3%E9%94%AE%E6%9D%83%E9%99%90%E4%BF%AE%E6%AD%A3%EF%BC%9A"><span class="nav-number">2.3.1.</span> <span class="nav-text">关键权限修正：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%BA%E7%8E%B0%E6%8A%A5%E9%94%99%EF%BC%9ANginx-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%AD%E6%B3%95%E9%94%99%E8%AF%AF"><span class="nav-number">2.3.2.</span> <span class="nav-text">出现报错：Nginx 配置文件语法错误</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E9%AA%8C%E8%AF%81-LNMP-%E5%85%A8%E9%93%BE%E8%B7%AF"><span class="nav-number">2.3.3.</span> <span class="nav-text">最终验证 LNMP 全链路</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%80%E7%BB%88%E4%BA%A4%E4%BB%98%E9%98%B6%E6%AE%B5-%EF%BC%9AWordPress-%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E5%85%A8%E6%B5%81%E7%A8%8B%E9%83%A8%E7%BD%B2%E4%B8%8A%E7%BA%BF"><span class="nav-number">3.</span> <span class="nav-text">最终交付阶段 ：WordPress 个人博客全流程部署上线</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WordPress-%E9%83%A8%E7%BD%B2"><span class="nav-number">3.1.</span> <span class="nav-text">WordPress 部署</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA-WordPress-%E5%88%9B%E5%BB%BA%E4%B8%93%E5%B1%9E%E6%95%B0%E6%8D%AE%E5%BA%93%E5%92%8C%E4%B8%93%E7%94%A8%E7%94%A8%E6%88%B7"><span class="nav-number">3.1.1.</span> <span class="nav-text">为 WordPress 创建专属数据库和专用用户</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BD-WordPress-%E5%AE%98%E6%96%B9%E6%9C%80%E6%96%B0%E7%89%88%EF%BC%8C%E9%83%A8%E7%BD%B2%E5%88%B0%E7%BD%91%E7%AB%99%E6%A0%B9%E7%9B%AE%E5%BD%95"><span class="nav-number">3.1.2.</span> <span class="nav-text">下载 WordPress 官方最新版，部署到网站根目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96-Nginx-%E9%85%8D%E7%BD%AE%EF%BC%8C%E9%80%82%E9%85%8D-WordPress-%E6%A0%B8%E5%BF%83%E9%9C%80%E6%B1%82"><span class="nav-number">3.1.3.</span> <span class="nav-text">优化 Nginx 配置，适配 WordPress 核心需求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BD%91%E9%A1%B5%E7%AB%AF%E5%88%9D%E5%A7%8B%E5%8C%96WordPress"><span class="nav-number">3.2.</span> <span class="nav-text">网页端初始化WordPress</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%87%BA%E9%94%99%EF%BC%81"><span class="nav-number">3.2.1.</span> <span class="nav-text">密码出错！</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E7%BA%BF%E9%AA%8C%E8%AF%81%E4%B8%8E%E5%AE%89%E5%85%A8%E6%94%B6%E5%B0%BE"><span class="nav-number">3.2.2.</span> <span class="nav-text">上线验证与安全收尾</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HT"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">HT</p>
+  <div class="site-description" itemprop="description">Fittness</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">8</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/04/13/%E5%9F%BA%E4%BA%8ELNMP%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BAWordPress%E5%8D%9A%E5%AE%A2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="HT">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HT's Blog">
+      <meta itemprop="description" content="Fittness">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="基于LNMP架构搭建WordPress博客 | HT's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于LNMP架构搭建WordPress博客
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-04-13 22:36:28 / 修改时间：23:52:47" itemprop="dateCreated datePublished" datetime="2026-04-13T22:36:28+08:00">2026-04-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">技术笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>《基于 LNMP 架构的企业级动态博客系统全流程运维与优化》<br>参考链接：<a target="_blank" rel="noopener" href="https://gitcode.csdn.net/69b3886d54b52172bc60e3b8.html">LNMP&#x2F;LNAMP 架构部署实战：从环境搭建到 Discuz 论坛与动静分离实现</a></p>
+<p>架构组成：Ubuntu 22.04（腾讯云轻量应用服务器）+ Nginx + mysql 8.0 + PHP</p>
+<span id="more"></span>
+
+
+<h1 id="阶段-1-项目前置准备与服务器初始化"><a href="#阶段-1-项目前置准备与服务器初始化" class="headerlink" title="阶段 1 项目前置准备与服务器初始化"></a>阶段 1 项目前置准备与服务器初始化</h1><h2 id="换源与更新"><a href="#换源与更新" class="headerlink" title="换源与更新"></a>换源与更新</h2><p>Ubuntu 默认的官方源在国外，访问速度慢，换成国内源提升速度。我目前租的这台腾讯云服务器默认配好软件源，这里就把已安装的软件包更新到最新稳定版即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apt update &amp;&amp; apt upgrade -y</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装工具"><a href="#安装工具" class="headerlink" title="安装工具"></a>安装工具</h2><ul>
+<li><code>wget/curl</code>：文件下载、网络请求工具，后续拉取安装包、验证网站可用性必用</li>
+<li><code>net-tools</code>：网络工具包，包含<code>ifconfig</code>、<code>netstat</code>等查看 IP、端口、网络连接的命令</li>
+<li><code>chrony</code>：企业级时间同步工具，保障服务器时间准确（日志、备份、监控的基础）</li>
+<li><code>ufw</code>：Ubuntu 系统默认的防火墙管理工具，后续安全加固必用</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install -y chrony ufw</span><br></pre></td></tr></table></figure>
+
+<h2 id="系统核心配置标准化"><a href="#系统核心配置标准化" class="headerlink" title="系统核心配置标准化"></a>系统核心配置标准化</h2><h3 id="配置主机名"><a href="#配置主机名" class="headerlink" title="配置主机名"></a>配置主机名</h3><p>在实际生产中，这一步是为了让管理更方便，一眼就能看出这台服务器的角色、环境、编号。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@VM-0-17-ubuntu:~$ hostnamectl set-hostname lnmp-ops-web01</span><br><span class="line">==== AUTHENTICATING FOR org.freedesktop.hostname1.set-static-hostname ===</span><br><span class="line">Authentication is required to <span class="built_in">set</span> the statically configured <span class="built_in">local</span> hostname, as well as the pretty hostname.</span><br><span class="line">Authenticating as: Ubuntu (ubuntu)</span><br><span class="line">Password: </span><br><span class="line">==== AUTHENTICATION COMPLETE ===</span><br><span class="line">ubuntu@VM-0-17-ubuntu:~$ <span class="built_in">exec</span> bash</span><br><span class="line">ubuntu@lnmp-ops-web01:~$        <span class="comment"># 修改完成！</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="配置时间同步"><a href="#配置时间同步" class="headerlink" title="配置时间同步"></a>配置时间同步</h3><p>配置时间同步是为了方便后续在日志中排查问题、数据库同步要求时间高度一致、让计划任务准时进行。</p>
+<p>启动服务（不过安装完其实默认自启动）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启动chrony服务并设置开机自启 </span></span><br><span class="line">systemctl <span class="built_in">enable</span> --now chronyd </span><br><span class="line"><span class="comment"># 配置国内阿里云时间服务器 </span></span><br><span class="line">vim /etc/chrony/chrony.conf</span><br></pre></td></tr></table></figure>
+
+<p>修改 chrony 配置文件（推荐先备份配置文件）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ vim /etc/chrony/chrony.conf</span><br><span class="line">...# 注释掉原先配置的官方时间源，添加国内的时间源</span><br><span class="line"> 19 <span class="comment"># See http://www.pool.ntp.org/join.html for more information.</span></span><br><span class="line"> 20 <span class="comment">#pool ntp.ubuntu.com        iburst maxsources 4</span></span><br><span class="line"> 21 <span class="comment">#pool 0.ubuntu.pool.ntp.org iburst maxsources 1</span></span><br><span class="line"> 22 <span class="comment">#pool 1.ubuntu.pool.ntp.org iburst maxsources 1</span></span><br><span class="line"> 23 <span class="comment">#pool 2.ubuntu.pool.ntp.org iburst maxsources 2</span></span><br><span class="line"> 24 pool ntp.aliyun.com iburst</span><br><span class="line"> 25 pool cn.ntp.org.cn iburst</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>配置代码解析：<br><code>pool</code> 是给 chrony 服务指定“用来校准本地时间的、靠谱的 NTP 时间服务器集群地址”。<br>被注释掉的是 Ubuntu 默认时间源，服务器都在国外，不稳定。<br>新添加的都是国内的时间源，第一个是阿里云官方提供的免费公共 NTP 时间源，在广州腾讯云服务器访问它，延迟只有几毫秒。第二个是这个国家授时中心主要的国内公共 NTP 源。如果阿里云的时间源故障，chrony 会自动切换到这个源。是一种“高可用、容灾”的思路。<br><code>iburst</code> 的作用是加速首次时间同步。<br><code>maxsources 4</code> 是 <code>pool</code> 指定的参数，帮助精细化控制。限制 chronyd 服务从这个地址池种最多挑选四个时间源节点。chrony 挑选的节点太多会降低精度、占用更多的 cpu、网络资源。我更改的时候不加这个参数是因为其实默认就是返回 4 个，四个也刚好是最优选（数据来源于网上，链接已丢失）。</p>
+</blockquote>
+<p>重启服务：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ systemctl restart chronyd</span><br><span class="line">root@lnmp-ops-web01:~$ chronyc tracking    <span class="comment"># 显示同步的时间服务器</span></span><br><span class="line">Reference ID    : 78197314 (120.25.115.20)  <span class="comment"># 成功配置上阿里云NTP服务器</span></span><br><span class="line">Stratum         : 3       <span class="comment"># 层级越小精度越高，2-4就够了</span></span><br><span class="line">Ref <span class="keyword">time</span> (UTC)  : Sun Apr 05 10:49:12 2026</span><br><span class="line">...</span><br><span class="line">root@lnmp-ops-web01:~$ chronyc sources -v  <span class="comment"># 查看外部时间源的健康状况和选取情况</span></span><br><span class="line"></span><br><span class="line">  .-- Source mode  <span class="string">&#x27;^&#x27;</span> = server, <span class="string">&#x27;=&#x27;</span> = peer, <span class="string">&#x27;#&#x27;</span> = <span class="built_in">local</span> clock.</span><br><span class="line"> / .- Source state <span class="string">&#x27;*&#x27;</span> = current best, <span class="string">&#x27;+&#x27;</span> = combined, <span class="string">&#x27;-&#x27;</span> = not combined,</span><br><span class="line">| /             <span class="string">&#x27;x&#x27;</span> = may be <span class="keyword">in</span> error, <span class="string">&#x27;~&#x27;</span> = too variable, <span class="string">&#x27;?&#x27;</span> = unusable.</span><br><span class="line">||                                                 .- xxxx [ yyyy ] +/- zzzz</span><br><span class="line">||      Reachability register (octal) -.           |  xxxx = adjusted offset,</span><br><span class="line">||      Log2(Polling interval) --.      |          |  yyyy = measured offset,</span><br><span class="line">||                                \     |          |  zzzz = estimated error.</span><br><span class="line">||                                 |    |           \</span><br><span class="line">MS Name/IP address         Stratum Poll Reach LastRx Last sample               </span><br><span class="line">===============================================================================</span><br><span class="line">^+ 203.107.6.88                  2   6   377    25  -1687us[-1687us] +/-   32ms</span><br><span class="line">^* 120.25.115.20                 2   6   377    27  -1517us[-1152us] +/-   15ms   <span class="comment"># 带星号的就是被选定的最靠谱的时间源。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭-swap-分区"><a href="#关闭-swap-分区" class="headerlink" title="关闭 swap 分区"></a>关闭 swap 分区</h3><p>避免性能损耗！防止内存溢出时使用磁盘交换分区，导致服务性能暴跌。—— <a href="/2026/04/09/Swap%E5%88%86%E5%8C%BA/" title="Swap分区">Swap分区</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 临时关闭</span></span><br><span class="line">Swap swapoff -a </span><br><span class="line"><span class="comment"># 永久关闭Swap，注释掉fstab里的Swap分区配置 </span></span><br><span class="line">sed -i <span class="string">&#x27;s/.*swap.*/#&amp;/&#x27;</span> /etc/fstab</span><br></pre></td></tr></table></figure>
+
+<p>有些时候需要 swap 分区，但会限制对 swap 分区的使用，可以通过修改 <code>/proc/sys/vm/swappiness</code> 文件来控制频率（0-100）。</p>
+<p>swap 那一行全是 0，就说明没开。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ free -h</span><br><span class="line">               total        used        free      shared  buff/cache   available</span><br><span class="line">Mem:           1.9Gi       287Mi       146Mi       2.0Mi       1.5Gi       1.5Gi</span><br><span class="line">Swap:             0B          0B          0B</span><br></pre></td></tr></table></figure>
+
+<h2 id="防火墙与-SSH-安全初始化"><a href="#防火墙与-SSH-安全初始化" class="headerlink" title="防火墙与 SSH 安全初始化"></a>防火墙与 SSH 安全初始化</h2><h3 id="防火墙配置"><a href="#防火墙配置" class="headerlink" title="防火墙配置"></a>防火墙配置</h3><p>只开放必要端口，其他默认拒绝。</p>
+<p>先允许 ssh、http、https 端口，避免启用防火墙后把自己踢下线就尴尬了 ~</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ ufw allow 22/tcp</span><br><span class="line">Rules updated</span><br><span class="line">Rules updated (v6)</span><br><span class="line">root@lnmp-ops-web01:~$ ufw allow 80/tcp</span><br><span class="line">Rules updated</span><br><span class="line">Rules updated (v6)</span><br><span class="line">root@lnmp-ops-web01:~$ ufw allow 443/tcp</span><br><span class="line">Rules updated</span><br><span class="line">Rules updated (v6)</span><br><span class="line">root@lnmp-ops-web01:~$ ufw <span class="built_in">enable</span>    <span class="comment"># 启动</span></span><br><span class="line">Command may disrupt existing ssh connections. Proceed with operation (y|n)? y</span><br><span class="line">Firewall is active and enabled on system startup</span><br><span class="line">root@lnmp-ops-web01:~$ systemctl <span class="built_in">enable</span> --now ufw   <span class="comment"># 设置开机自启动</span></span><br><span class="line">Synchronizing state of ufw.service with SysV service script with /lib/systemd/systemd-sysv-install.</span><br><span class="line">Executing: /lib/systemd/systemd-sysv-install <span class="built_in">enable</span> ufw</span><br><span class="line">root@lnmp-ops-web01:~$ ufw status   <span class="comment"># 查看状态、已开放端口</span></span><br><span class="line">Status: active</span><br><span class="line"></span><br><span class="line">To                         Action      From</span><br><span class="line">--                         ------      ----</span><br><span class="line">22/tcp                     ALLOW       Anywhere                  </span><br><span class="line">80/tcp                     ALLOW       Anywhere                  </span><br><span class="line">443/tcp                    ALLOW       Anywhere                  </span><br><span class="line">22/tcp (v6)                ALLOW       Anywhere (v6)             </span><br><span class="line">80/tcp (v6)                ALLOW       Anywhere (v6)             </span><br><span class="line">443/tcp (v6)               ALLOW       Anywhere (v6)             </span><br></pre></td></tr></table></figure>
+
+<h3 id="ssh-服务安全加固"><a href="#ssh-服务安全加固" class="headerlink" title="ssh 服务安全加固"></a>ssh 服务安全加固</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 备份SSH配置文件 </span></span><br><span class="line"><span class="built_in">cp</span> /etc/ssh/sshd_config /etc/ssh/sshd_config.backup </span><br><span class="line"><span class="comment"># 打开SSH配置文件 </span></span><br><span class="line">vim /etc/ssh/sshd_config</span><br><span class="line"><span class="comment"># Logging</span></span><br><span class="line"><span class="comment">#SyslogFacility AUTH</span></span><br><span class="line"><span class="comment"># 开启日志记录，方便后续排查登录异常</span></span><br><span class="line">SyslogFacility AUTHPRIV</span><br><span class="line">LogLevel INFO</span><br><span class="line"></span><br><span class="line"><span class="comment"># Authentication:</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#LoginGraceTime 2m</span></span><br><span class="line">PermitRootLogin <span class="built_in">yes</span> </span><br><span class="line"><span class="comment">#StrictModes yes</span></span><br><span class="line"><span class="comment"># 登录失败3次，锁定IP5分钟，防暴力破解</span></span><br><span class="line">MaxAuthTries 3</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="comment">#PasswordAuthentication yes</span></span><br><span class="line"><span class="comment"># 禁止空密码登录</span></span><br><span class="line">PermitEmptyPasswords no</span><br><span class="line"></span><br><span class="line"><span class="comment"># 客户端超时时间，10分钟无操作自动断开</span></span><br><span class="line">ClientAliveInterval 600</span><br><span class="line">ClientAliveCountMax 0</span><br></pre></td></tr></table></figure>
+
+<p>检查并重启 ssh 服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ sshd -t    <span class="comment"># 改完服务配置，先检查语法，再重启服务</span></span><br><span class="line">root@lnmp-ops-web01:~$ systemctl restart sshd</span><br></pre></td></tr></table></figure>
+
+<h1 id="阶段-2-LNMP-核心组件安装与基础配置"><a href="#阶段-2-LNMP-核心组件安装与基础配置" class="headerlink" title="阶段 2 LNMP 核心组件安装与基础配置"></a>阶段 2 LNMP 核心组件安装与基础配置</h1><h2 id="安装-Nginx"><a href="#安装-Nginx" class="headerlink" title="安装 Nginx"></a>安装 Nginx</h2><p>一般有两种安装方式，一种是包管理器安装二进制文件，另一种是编译源码包来定制化安装（参考官方文档：<a target="_blank" rel="noopener" href="https://nginx.org/en/docs/configure.html">https://nginx.org/en/docs/configure.html</a>）。这里暂无定制需求，使用包管理器进行安装（参考官方文档：<a target="_blank" rel="noopener" href="https://nginx.org/en/linux_packages.html">https://nginx.org/en/linux_packages.html</a>）。</p>
+<p>安装依赖工具：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">sudo</span> apt install curl gnupg2 ca-certificates lsb-release ubuntu-keyring</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree... Done</span><br><span class="line">Reading state information... Done</span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">No containers need to be restarted.</span><br><span class="line"></span><br><span class="line">No user sessions are running outdated binaries.</span><br><span class="line"></span><br><span class="line">No VM guests are running outdated hypervisor (qemu) binaries on this host.</span><br><span class="line"></span><br><span class="line">```</span><br></pre></td></tr></table></figure>
+
+<p>导入官方 Nginx 签名密钥，<code>apt</code> 才能验证软件包的真实性：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \</span><br><span class="line">    | <span class="built_in">sudo</span> <span class="built_in">tee</span> /usr/share/keyrings/nginx-archive-keyring.gpg &gt;/dev/null</span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100 11809  100 11809    0     0   8468      0  0:00:01  0:00:01 --:--:--  8471</span><br></pre></td></tr></table></figure>
+
+<p>验证下载的文件是否包含正确的密钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ gpg --dry-run --quiet --no-keyring --import --import-options import-show /usr/share/keyrings/nginx-archive-keyring.gpg</span><br><span class="line">pub   rsa4096 2024-05-29 [SC]</span><br><span class="line">      8540A6F18833A80E9C1653A42FD21310B49F6B46</span><br><span class="line">uid                      nginx signing key &lt;signing-key-2@nginx.com&gt;</span><br><span class="line"></span><br><span class="line">pub   rsa2048 2011-08-19 [SC] [expires: 2027-05-24]</span><br><span class="line">      573BFD6B3D8FBC641079A6ABABF5BD827BD9BF62          <span class="comment"># 符合官方文档</span></span><br><span class="line">uid                      nginx signing key &lt;signing-key@nginx.com&gt;</span><br><span class="line"></span><br><span class="line">pub   rsa4096 2024-05-29 [SC]</span><br><span class="line">      9E9BE90EACBCDE69FE9B204CBCDCD8A38D88A2B3</span><br><span class="line">uid                      nginx signing key &lt;signing-key-3@nginx.com&gt;</span><br></pre></td></tr></table></figure>
+
+<p>为稳定版 nginx 软件包设置 apt 软件源：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">echo</span> <span class="string">&quot;deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \</span></span><br><span class="line"><span class="string">https://nginx.org/packages/ubuntu `lsb_release -cs` nginx&quot;</span> \</span><br><span class="line">    | <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/nginx.list</span><br><span class="line">deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu jammy nginx</span><br><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">cat</span> /etc/apt/sources.list.d/nginx.list     <span class="comment"># 这里可以看到软件源已经创建成功</span></span><br><span class="line">deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] https://nginx.org/packages/ubuntu jammy nginx</span><br></pre></td></tr></table></figure>
+
+<p>设置仓库固定优先级，有限使用 nginx 软件包而非 Ubuntu 发行版提供的软件包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">echo</span> -e <span class="string">&quot;Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n&quot;</span> \</span><br><span class="line">    | <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/preferences.d/99nginx</span><br><span class="line">Package: *</span><br><span class="line">Pin: origin nginx.org</span><br><span class="line">Pin: release o=nginx</span><br><span class="line">Pin-Priority: 900</span><br></pre></td></tr></table></figure>
+
+<p>安装 Nginx：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install -y nginx</span><br></pre></td></tr></table></figure>
+
+<p>启动 Nginx，并设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ systemctl status nginx</span><br><span class="line">○ nginx.service - nginx - high performance web server</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)</span><br><span class="line">     Active: inactive (dead)    <span class="comment"># 可以看出nginx安装完是没有自动启动的</span></span><br><span class="line">       Docs: https://nginx.org/en/docs/</span><br><span class="line"></span><br><span class="line">root@lnmp-ops-web01:~$ systemctl <span class="built_in">enable</span> --now nginx</span><br><span class="line">Synchronizing state of nginx.service with SysV service script with /lib/systemd/systemd-sysv-install.</span><br><span class="line">Executing: /lib/systemd/systemd-sysv-install <span class="built_in">enable</span> nginx</span><br><span class="line"></span><br><span class="line">root@lnmp-ops-web01:~$ curl 127.0.0.1   <span class="comment"># 返回 Nginx 默认欢迎页</span></span><br></pre></td></tr></table></figure>
+
+<p>访问当前云服务器的 ip，即可看到 nginx 默认欢迎页。</p>
+<h2 id="MySQL-的安装与初始化"><a href="#MySQL-的安装与初始化" class="headerlink" title="MySQL 的安装与初始化"></a>MySQL 的安装与初始化</h2><h3 id="MySQL-安装"><a href="#MySQL-安装" class="headerlink" title="MySQL 安装"></a>MySQL 安装</h3><p>参考官方文档：<a target="_blank" rel="noopener" href="https://dev.mysql.com/doc/refman/8.4/en/linux-installation-apt-repo.html">https://dev.mysql.com/doc/refman/8.4/en/linux-installation-apt-repo.html</a></p>
+<p>下载官方 apt 源配置包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ wget https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb</span><br><span class="line">--2026-04-07 15:20:58--  https://dev.mysql.com/get/mysql-apt-config_0.8.33-1_all.deb</span><br><span class="line">Resolving dev.mysql.com (dev.mysql.com)... 23.51.205.46, 2600:140b:ac00:285::2e31, 2600:140b:ac00:2ae::2e31</span><br><span class="line">Connecting to dev.mysql.com (dev.mysql.com)|23.51.205.46|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 302 Moved Temporarily</span><br><span class="line">Location: https://repo.mysql.com//mysql-apt-config_0.8.33-1_all.deb [following]</span><br><span class="line">--2026-04-07 15:20:59--  https://repo.mysql.com//mysql-apt-config_0.8.33-1_all.deb</span><br><span class="line">Resolving repo.mysql.com (repo.mysql.com)... 23.5.12.167, 2600:140b:1e00:a82::1d68, 2600:140b:1e00:a88::1d68</span><br><span class="line">Connecting to repo.mysql.com (repo.mysql.com)|23.5.12.167|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 18072 (18K) [application/x-debian-package]</span><br><span class="line">Saving to: ‘mysql-apt-config_0.8.33-1_all.deb’</span><br><span class="line"></span><br><span class="line">mysql-apt-config_0.8.33-1_al 100%[===========================================&gt;]  17.65K  --.-KB/s    <span class="keyword">in</span> 0s      </span><br><span class="line"></span><br><span class="line">2026-04-07 15:20:59 (238 MB/s) - ‘mysql-apt-config_0.8.33-1_all.deb’ saved [18072/18072]</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这个配置安装完之后会自动完成优先级配置，安装思路和 Nginx 差不多，都是配置第三方软件源，只不过 MySQL 提供的源配置文件会解决优先级配置和源冲突屏蔽，所以后续步骤跟 Nginx 的安装不同。</p>
+</blockquote>
+<p>安装官方源配置包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ dpkg -i mysql-apt-config_0.8.33-1_all.deb</span><br><span class="line">Selecting previously unselected package mysql-apt-config.</span><br><span class="line">(Reading database ... 126538 files and directories currently installed.)</span><br><span class="line">Preparing to unpack mysql-apt-config_0.8.33-1_all.deb ...</span><br><span class="line">Unpacking mysql-apt-config (0.8.33-1) ...</span><br><span class="line">Setting up mysql-apt-config (0.8.33-1) ...</span><br><span class="line">root@lnmp-ops-web01:~$ </span><br></pre></td></tr></table></figure>
+
+<p>安装完会进入一个配置界面：</p>
+<p>选中第一个 MySQL Server &amp; Cluster，然后回车-选择 mysql-8.0-回车-第二个不用配置，默认即可-方向键选择第三个（Ok）-回车即完成配置，回到命令行界面。</p>
+<p>更新软件包索引，同步 MySQL 官方源信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ apt update</span><br><span class="line">Hit:1 http://mirrors.tencentyun.com/ubuntu jammy InRelease</span><br><span class="line">Hit:2 http://mirrors.tencentyun.com/ubuntu jammy-updates InRelease</span><br><span class="line">Hit:3 http://mirrors.tencentyun.com/ubuntu jammy-security InRelease</span><br><span class="line">Get:4 http://repo.mysql.com/apt/ubuntu jammy InRelease [25.1 kB]</span><br><span class="line">Err:4 http://repo.mysql.com/apt/ubuntu jammy InRelease       <span class="comment"># 报错了，下面这一行提醒GPG密钥过期</span></span><br><span class="line">  The following signatures were invalid: EXPKEYSIG B7B3B788A8D3785C MySQL Release Engineering &lt;mysql-build@oss.oracle.com&gt;</span><br><span class="line">Hit:5 https://nginx.org/packages/ubuntu jammy InRelease</span><br><span class="line">Reading package lists... Done</span><br><span class="line">W: GPG error: http://repo.mysql.com/apt/ubuntu jammy InRelease: The following signatures were invalid: EXPKEYSIG B7B3B788A8D3785C MySQL Release Engineering &lt;mysql-build@oss.oracle.com&gt;</span><br><span class="line">E: The repository <span class="string">&#x27;http://repo.mysql.com/apt/ubuntu jammy InRelease&#x27;</span> is not signed.</span><br><span class="line">N: Updating from such a repository can<span class="string">&#x27;t be done securely, and is therefore disabled by default.</span></span><br><span class="line"><span class="string">N: See apt-secure(8) manpage for repository creation and user configuration details.</span></span><br><span class="line"><span class="string">root@lnmp-ops-web01:~$</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>为什么官方文档用 <code>apt-get</code> 而这里用 <code>apt</code> 呢？</p>
+<p>其实在这个场景下效果都一样，官方文档应该是面向所有 Debian&#x2F;Ubuntu 用户，而 <code>apt-get</code> 老版本也能用。</p>
+<p>这里用 <code>apt</code> 主要是习惯了。对于这俩的区别将另起一个笔记。</p>
+</blockquote>
+<h4 id="报错：GPG-密钥过期"><a href="#报错：GPG-密钥过期" class="headerlink" title="报错：GPG 密钥过期"></a>报错：GPG 密钥过期</h4><p>本次项目第一次报错，以下是记录和分析：</p>
+<p><strong>核心报错部分</strong>：</p>
+<p>核心报错，关键词是 <code>EXPKEYSIG</code> —— 这是「<strong>GPG 密钥过期</strong>」的标准错误标识。</p>
+<p>这是因为 MySQL 官方用于签名软件源的 GPG 密钥已过期，本地存储的旧密钥无法通过 apt 的安全校验，导致源被系统自动禁用。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Err:4 http://repo.mysql.com/apt/ubuntu jammy InRelease       </span><br><span class="line">  The following signatures were invalid: EXPKEYSIG B7B3B788A8D3785C MySQL Release Engineering &lt;mysql-build@oss.oracle.com&gt;</span><br></pre></td></tr></table></figure>
+
+<p>经检验，本地的密钥确实过期半年了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ gpg --show-keys /usr/share/keyrings/mysql-apt-config.gpg </span><br><span class="line">pub   rsa4096 2023-10-23 [SC] [expired: 2025-10-22]</span><br><span class="line">      BCA43417C3B485DD128EC6D4B7B3B788A8D3785C</span><br><span class="line">uid                      MySQL Release Engineering &lt;mysql-build@oss.oracle.com&gt;</span><br><span class="line">sub   rsa4096 2023-10-23 [E] [expired: 2025-10-22]</span><br></pre></td></tr></table></figure>
+
+<p><strong>解决方案（参考链接：</strong><a target="_blank" rel="noopener" href="https://jishuzhan.net/article/1959517935042605058">MySQL GPG 密钥更新问题解决文档 - 技术栈</a>，<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45160274/article/details/155494801">【超详细】Ubuntu 系统安装 MySQL 8.0 时 GPG 错误解决方案全攻略（增强版）_mysql8.0没有公钥无法验证签名-CSDN博客</a>）：</p>
+<blockquote>
+<p>文档内都是2022或者2023的密钥，现在全都过期了，将链接密钥后的2023改成2025即可发现最新密钥。<br>这个报错也请教了Gemini和豆包专家版，俩哥们非常坚定地说2023版就是最新的，可以用到2027年，就算把<code>gpg --show-keys</code> 显示的内容给这哥们也不肯认错【笑哭】。<br>重新导入 MySQL 官方最新的 GPG 密钥（https:&#x2F;&#x2F;repo. Mysql. Com&#x2F;RPM-GPG-KEY-mysql-2025）：</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ apt clean all  <span class="comment"># 清空apt的缓存</span></span><br><span class="line">root@lnmp-ops-web01:~$ curl -fsSL https://repo.mysql.com/RPM-GPG-KEY-mysql-2025 | gpg --dearmor -o /usr/share/keyrings/mysql-apt-config.gpg</span><br><span class="line">File <span class="string">&#x27;/usr/share/keyrings/mysql-apt-config.gpg&#x27;</span> exists. Overwrite? (y/N) y</span><br><span class="line">root@lnmp-ops-web01:~$ gpg --show-keys /usr/share/keyrings/mysql-apt-config.gpg </span><br><span class="line">pub   rsa4096 2023-10-23 [SC] [expires: 2027-10-23]    <span class="comment"># 可以看到最新的密钥有效期到2027年</span></span><br><span class="line">      BCA43417C3B485DD128EC6D4B7B3B788A8D3785C</span><br><span class="line">uid                      MySQL Release Engineering &lt;mysql-build@oss.oracle.com&gt;</span><br><span class="line">sub   rsa4096 2023-10-23 [E] [expires: 2027-10-23]</span><br></pre></td></tr></table></figure>
+
+<p>问题解决：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ apt update</span><br><span class="line">Hit:1 http://mirrors.tencentyun.com/ubuntu jammy InRelease</span><br><span class="line">Get:2 http://mirrors.tencentyun.com/ubuntu jammy-updates InRelease [128 kB]</span><br><span class="line">...</span><br><span class="line">Reading package lists... Done</span><br><span class="line">Building dependency tree... Done</span><br><span class="line">Reading state information... Done</span><br><span class="line">1 package can be upgraded. Run <span class="string">&#x27;apt list --upgradable&#x27;</span> to see it.</span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-MySQL-并初始化"><a href="#安装-MySQL-并初始化" class="headerlink" title="安装 MySQL 并初始化"></a>安装 MySQL 并初始化</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ apt install -y mysql-community-server</span><br></pre></td></tr></table></figure>
+
+<p>之后Configuring mysql-community-server 的页面，输入密码-再输入一遍-进入图二-默认第一个即可-tab 选择 ok-回车。</p>
+<blockquote>
+<p>为什么选择默认（参考自豆包专家版）：</p>
+<p>1. 第一个选项：<code>Use Strong Password Encryption (RECOMMENDED)</code></p>
+<ul>
+<li>底层用的是 <code>caching_sha2_password</code> 认证插件，是 MySQL 8.0 官方主推的<strong>强加密认证方式</strong>，基于 SHA 256 算法，密码加密强度、防破解能力远高于旧版本，是企业生产环境的强制标准选择。</li>
+<li>和后续要做的 <code>mysql_secure_installation</code> 安全初始化完全匹配。</li>
+</ul>
+<p>2. 第二个选项：<code>Use Legacy Authentication Method (Retain MySQL 5.x Compatibility)</code></p>
+<ul>
+<li>底层用的是旧版 <code>mysql_native_password</code> 认证插件，是 MySQL 5. X 时代的老旧加密方式，安全性差，官方已经明确不推荐使用。</li>
+<li>仅有的适用场景：你需要用十几年前的老旧客户端（比如 PHP 5. X、2018 年之前的老版本 Navicat）连接数据库。</li>
+</ul>
+</blockquote>
+<p>启动 MySQL，并设置开机自启：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ systemctl <span class="built_in">enable</span> --now mysql</span><br><span class="line">root@lnmp-ops-web01:~$ systemctl status mysql</span><br><span class="line">● mysql.service - MySQL Community Server</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/mysql.service; enabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) since Tue 2026-04-07 17:33:00 CST; 1min 57s ago</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><strong>开始安全初始化</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ mysql_secure_installation </span><br><span class="line"></span><br><span class="line">Securing the MySQL server deployment.</span><br><span class="line"></span><br><span class="line">Enter password <span class="keyword">for</span> user root:             <span class="comment"># 输入刚刚设置的root密码</span></span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">Press y|Y <span class="keyword">for</span> Yes, any other key <span class="keyword">for</span> No: n   <span class="comment"># 是否安装密码强度验证插件？不用，加了虽然可以定制密码校验规则，但在这个项目中，为了方便就不装了。</span></span><br><span class="line">Using existing password <span class="keyword">for</span> root.</span><br><span class="line">Change the password <span class="keyword">for</span> root ? ((Press y|Y for Yes, any other key for No) : n  # 是否修改root密码，看需求</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">Remove anonymous users? (Press y|Y for Yes, any other key for No) : y  # 删除匿名用户。匿名用户可以让任何人登录MySQL，有安全漏洞。</span><br><span class="line">Success.</span><br><span class="line">...</span><br><span class="line">Disallow root login remotely? (Press y|Y for Yes, any other key for No) : y  # 禁止root用户远程登陆。有安全风险</span><br><span class="line">Success.</span><br><span class="line">...</span><br><span class="line">Remove test database and access to it? (Press y|Y for Yes, any other key for No) : y  # 删除测试数据库。默认的test数据库任何人都可以访问，也是安全漏洞</span><br><span class="line"> - Dropping test database...</span><br><span class="line">...</span><br><span class="line">Reload privilege tables now? (Press y|Y for Yes, any other key for No) : y  # 让刚刚的配置生效</span><br><span class="line">Success.</span><br><span class="line"></span><br><span class="line">All done! </span><br><span class="line">root@lnmp-ops-web01 :~$ systemctl status mysql</span><br><span class="line">● mysql. Service - MySQL Community Server</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/mysql.service; enabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) since Tue <span class="number">2026</span>-<span class="number">04</span>-<span class="number">07</span> <span class="number">17</span>:<span class="number">33</span>:<span class="number">00</span> CST; <span class="number">13</span>min ago</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>登录 MySQL，验证配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ mysql -u root -p </span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection <span class="built_in">id</span> is 10</span><br><span class="line">Server version: 8.0.45 MySQL Community Server - GPL</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2026, Oracle and/or its affiliates.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">&#x27;help;&#x27;</span> or <span class="string">&#x27;\h&#x27;</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">&#x27;\c&#x27;</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt; SELECT user, host FROM mysql.user;</span><br><span class="line">+------------------+-----------+</span><br><span class="line">| user             | host      |</span><br><span class="line">+------------------+-----------+</span><br><span class="line">| mysql.infoschema | localhost |</span><br><span class="line">| mysql.session    | localhost |</span><br><span class="line">| mysql.sys        | localhost |</span><br><span class="line">| root             | localhost |</span><br><span class="line">+------------------+-----------+</span><br><span class="line">4 rows <span class="keyword">in</span> <span class="built_in">set</span> (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="built_in">exit</span></span><br><span class="line">Bye</span><br></pre></td></tr></table></figure>
+
+<p>这样就算配置成功了！</p>
+<blockquote>
+<p>匿名用户一般长这样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+------------------+-----------+</span><br><span class="line">| user             | host      |</span><br><span class="line">+------------------+-----------+</span><br><span class="line">|                  | localhost |   <span class="comment"># 本地匿名用户</span></span><br><span class="line">|                  | %         |   <span class="comment"># 允许远程匿名用户</span></span><br><span class="line">| root             | localhost |   <span class="comment"># 正常root用户</span></span><br><span class="line">+------------------+-----------+</span><br></pre></td></tr></table></figure>
+
+<p>远程 root 用户一般长这样：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+------------------+-----------+</span><br><span class="line">| user             | host      |</span><br><span class="line">+------------------+-----------+</span><br><span class="line">| root             | localhost |   <span class="comment"># 正常root用户</span></span><br><span class="line">| root             | %         |   <span class="comment"># 允许所有IP远程登录的root用户</span></span><br><span class="line">| root             | 1.2.3.4   |   <span class="comment"># 允许指定公网ip远程登陆的root用户</span></span><br><span class="line">+------------------+-----------+</span><br></pre></td></tr></table></figure></blockquote>
+<h2 id="PHP-安装"><a href="#PHP-安装" class="headerlink" title="PHP 安装"></a>PHP 安装</h2><p>参考链接：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/669098739">LNMP 架构的搭建及应用部署详解（超详细） - 知乎</a>、<br><a target="_blank" rel="noopener" href="https://help.aliyun.com/zh/ecs/user-guide/deploy-the-lnmp-environment#07e1197a64sfg">部署LNMP环境（Linux、Nginx、MySQL和PHP）-云服务器 ECS(ECS)-阿里云帮助中心</a>、<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010953609/article/details/120592289">PPA 软件源 ppa:ondrej&#x2F;php 在哪里找到的-CSDN博客</a>、<br><a target="_blank" rel="noopener" href="https://dev59.com/askubuntu/PUnSa4cB1Zd3GeqPMUFk">无法在Ubuntu 20.04中添加ondrej软件源的apt仓库。 package-management php ppa - Dev59</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/feiffy/p/8660737.html">一文彻底解决Ubuntu上PHP的安装以及版本切换 - FEIFFY181 - 博客园</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/213/8044">云服务器 手动搭建 WordPress 个人站点（Linux）_</a><br><a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/213/111831#23f0ef2a-7e0b-4d62-9fd9-0440eb790998">云服务器 手动搭建 LNMP 环境（Ubuntu）_腾讯云</a></p>
+<p>本阶段要安装<strong>PHP-FPM</strong>，这是 PHP 官方内置的一个 FastCGI 进程管理器。</p>
+<blockquote>
+<p>什么是 CGI？</p>
+<p>通用网关接口（Common Gateway Interface），最早的 Web 服务器与后端程序的通信标准&#x2F;工具，运行在网络服务器上。它的运行逻辑是每来一个 PHP 请求，Web 服务器就临时创建一个 CGI 进程，执行完 PHP 代码后立刻销毁进程。这在处理高并发访问几乎是不可用的，性能极差。</p>
+<p>什么是 FastCGI？</p>
+<p>它是前者的高性能升级方案，通过<strong>预先启动一批 PHP 进程常驻内存</strong>来提高效率。Web 服务器通过 FastCGI 协议把请求传给这些常驻进程，处理完后进程不退出，持续等待下一个请求，极大降低了资源开销，提升了并发能力。</p>
+</blockquote>
+<p>添加 PHP 官方维护的 PPA 源（官方维护的第三方 PPA 源，版本更新快、扩展最全、兼容性最好）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装PPA源依赖工具</span></span><br><span class="line">root@lnmp-ops-web01:~$ apt install -y software-properties-common</span><br><span class="line">Reading package lists... Done</span><br><span class="line">...</span><br><span class="line">  libxrender1 libxt6 libxxf86vm1 sntp x11-common</span><br><span class="line">Use <span class="string">&#x27;apt autoremove&#x27;</span> to remove them.</span><br><span class="line">0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.</span><br><span class="line"><span class="comment"># 添加PHP官方PPA源</span></span><br><span class="line">root@lnmp-ops-web01:~$ add-apt-repository ppa:ondrej/php -y</span><br><span class="line">PPA publishes dbgsym, you may need to include <span class="string">&#x27;main/debug&#x27;</span> component</span><br><span class="line">Repository: <span class="string">&#x27;deb https://ppa.launchpadcontent.net/ondrej/php/ubuntu/ jammy main&#x27;</span></span><br><span class="line">Description:</span><br><span class="line">...</span><br><span class="line">Get:11 https://ppa.launchpadcontent.net/ondrej/php/ubuntu jammy/main Translation-en [46.9 kB]                   </span><br><span class="line">Fetched 4,002 kB <span class="keyword">in</span> 11s (372 kB/s)                                                                              </span><br><span class="line">Reading package lists... Done</span><br><span class="line"><span class="comment"># 更新源索引</span></span><br><span class="line">root@lnmp-ops-web01:~$ apt update</span><br></pre></td></tr></table></figure>
+
+<p>安装 PHP 8.1-FPM+WordPress 必须的扩展：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ apt install -y php8.1-fpm php8.1-mysql php8.1-curl php8.1-gd php8.1-mbstring php8.1-xml php8.1-zip php8.1-intl php8.1-soap php8.1-bcmath php8.1-opcache</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="left">扩展名</th>
+<th align="left">核心作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>php 8.1-fpm</code></td>
+<td align="left">PHP 核心 FastCGI 进程管理器，处理 PHP 动态请求</td>
+</tr>
+<tr>
+<td align="left"><code>php8.1-mysql</code></td>
+<td align="left">PHP 连接 MySQL 数据库的驱动，核心必备</td>
+</tr>
+<tr>
+<td align="left"><code>php8.1-gd</code></td>
+<td align="left">图片处理扩展，WordPress 的缩略图、头像、图片编辑功能必需</td>
+</tr>
+<tr>
+<td align="left"><code>php8.1-curl</code></td>
+<td align="left">网络请求扩展，WordPress 更新、插件安装、远程请求必需</td>
+</tr>
+<tr>
+<td align="left"><code>php8.1-zip</code></td>
+<td align="left">压缩包处理扩展，WordPress 主题、插件安装解压必需</td>
+</tr>
+</tbody></table>
+<p>验证服务状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ systemctl status php8.1-fpm</span><br><span class="line">● php8.1-fpm.service - The PHP 8.1 FastCGI Process Manager</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/php8.1-fpm.service; enabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) s ...</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>验证 PHP 版本与扩展：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ php -v</span><br><span class="line">PHP 8.1.34 (cli) (built: Feb 13 2026 15:56:55) (NTS)</span><br><span class="line">Copyright (c) The PHP Group</span><br><span class="line">Zend Engine v4.1.34, Copyright (c) Zend Technologies</span><br><span class="line">    with Zend OPcache v8.1.34, Copyright (c), by Zend Technologies</span><br><span class="line">root@lnmp-ops-web01:~$ php -m</span><br><span class="line"><span class="comment"># 有mysqli、curl、gd以及上面指定安装的扩展即可</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="关键权限修正："><a href="#关键权限修正：" class="headerlink" title="关键权限修正："></a>关键权限修正：</h4><p>这一步说实话有点懵，阿里云和腾讯云的部署文档都没有这一步，但是豆包专家版和 Gemini 都说要做好这部分的配置，原因是 Nginx 官方源下载的 Nginx 默认运行用户是 <code>nginx</code>，，而 Ubuntu 的 PHP-FPM 默认运行用户是 <code>www-data</code>，两者用户不匹配会导致后续出现<strong>403 Forbidden 权限报错。</strong></p>
+<p>这里先验证一下他们说的对不对，查看 nginx 的运行用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">cat</span> /etc/nginx/nginx.conf</span><br><span class="line">user  nginx;                    <span class="comment"># 确实符合 AI 的描述</span></span><br><span class="line">worker_processes  auto;</span><br><span class="line"></span><br><span class="line">error_log  /var/log/nginx/error.log notice;</span><br><span class="line">pid        /run/nginx.pid;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>查看 PHP-FPM 的运行用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看PHP-FPM的配置文件</span></span><br><span class="line">root@lnmp-ops-web01:~$ grep <span class="string">&#x27;^user&#x27;</span> /etc/php/8.1/fpm/pool.d/www.conf </span><br><span class="line">user = www-data       <span class="comment"># 符合 AI 的描述</span></span><br><span class="line"><span class="comment"># 查看系统进程：</span></span><br><span class="line">root@lnmp-ops-web01:~$ ps aux | grep php-fpm</span><br><span class="line">root      901573  0.0  1.7 254400 34936 ?        Ss   16:31   0:00 php-fpm: master process (/etc/php/8.1/fpm/php-fpm.conf)</span><br><span class="line">www-data  901574  0.0  0.6 254928 13204 ?        S    16:31   0:00 php-fpm: pool www</span><br><span class="line">www-data  901575  0.0  0.6 254928 13204 ?        S    16:31   0:00 php-fpm: pool www</span><br><span class="line">root      924582  0.0  0.1   6480  2264 pts/1    S+   18:07   0:00 grep --color=auto php-fpm</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>验证完发现符合 AI 老师们的描述，这里开始 nginx 运行用户和权限的修改。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改Nginx主配置</span></span><br><span class="line">sed -i <span class="string">&#x27;s/user  nginx;/user  www-data;/g&#x27;</span> /etc/nginx/nginx.conf    <span class="comment"># 这里要注意，user和nginx之间是两个空格</span></span><br><span class="line"><span class="comment"># 修改网站根目录的权限，归属给 www-data 用户</span></span><br><span class="line">root@lnmp-ops-web01:~$ ll /usr/share/nginx/</span><br><span class="line">total 12</span><br><span class="line">drwxr-xr-x   3 root root 4096 Apr  7 14:06 ./</span><br><span class="line">drwxr-xr-x 132 root root 4096 Apr  8 16:31 ../</span><br><span class="line">drwxr-xr-x   2 root root 4096 Apr  7 14:06 html/</span><br><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">chown</span> -R www-data:www-data /usr/share/nginx/html</span><br><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">chmod</span> -R 755 /usr/share/nginx/html/</span><br><span class="line">root@lnmp-ops-web01:~$ ll /usr/share/nginx/</span><br><span class="line">total 12</span><br><span class="line">drwxr-xr-x   3 root     root     4096 Apr  7 14:06 ./</span><br><span class="line">drwxr-xr-x 132 root     root     4096 Apr  8 16:31 ../</span><br><span class="line">drwxr-xr-x   2 www-data www-data 4096 Apr  7 14:06 html/</span><br></pre></td></tr></table></figure>
+
+<p>验证 nginx 配置语法无错误，重载生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ nginx -t</span><br><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf <span class="built_in">test</span> is successful</span><br><span class="line">root@lnmp-ops-web01:~$ systemctl reload nginx</span><br></pre></td></tr></table></figure>
+
+<p>** 打通 Nginx 和 PHP-FPM 的通信**：</p>
+<p>这一步的目的是让 Nginx 能把. Php 结尾的动态请求，正确转发给 PHP-FPM 处理。</p>
+<p>而 Nginx 本身<strong>不能直接解析 PHP 代码</strong>，它只擅长处理静态资源（图片、HTML、CSS）。而对于 PHP 动态请求，就需要通过 FastCGI 协议来转发给 PHP-FPM 进程，让这一进程来解析执行，执行完成后把结果返回给 Nginx，最终返回给用户。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入nginx站点目录</span></span><br><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">cd</span> /etc/nginx/conf.d/</span><br><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ ll</span><br><span class="line">total 12</span><br><span class="line">drwxr-xr-x 2 root root 4096 Apr  7 14:06 ./</span><br><span class="line">drwxr-xr-x 3 root root 4096 Apr  8 18:15 ../</span><br><span class="line">-rw-r--r-- 1 root root 1072 Mar 25 03:03 default.conf</span><br><span class="line"><span class="comment"># 新建 WordPress 博客的专属站点配置文件</span></span><br><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ <span class="built_in">cat</span> &gt; wordpress.conf &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">server &#123;</span></span><br><span class="line"><span class="string">    listen 80;</span></span><br><span class="line"><span class="string">    server_name _;  # 后续可以换成域名，现在用_代表匹配所有IP访问</span></span><br><span class="line"><span class="string">    root /usr/share/nginx/html;  # 网站根目录，后续放WordPress程序</span></span><br><span class="line"><span class="string">    index index.html index.htm index.php;  # 优先加载的首页文件，新增index.php优先级</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    # 处理PHP动态请求的核心配置</span></span><br><span class="line"><span class="string">    location ~ \.php$ &#123;</span></span><br><span class="line"><span class="string">        fastcgi_pass unix:/run/php/php8.1-fpm.sock;  # 转发到PHP-FPM的本地socket（比TCP性能更高）</span></span><br><span class="line"><span class="string">        fastcgi_index index.php;</span></span><br><span class="line"><span class="string">        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;</span></span><br><span class="line"><span class="string">        include fastcgi_params;  # 加载fastcgi默认参数</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"><span class="comment"># 再次验证配置语法，重载 Nginx 生效</span></span><br><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ nginx -t</span><br><span class="line">nginx: [emerg] invalid number of arguments <span class="keyword">in</span> <span class="string">&quot;fastcgi_param&quot;</span> directive <span class="keyword">in</span> /etc/nginx/conf.d/wordpress.conf:11</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf <span class="built_in">test</span> failed        <span class="comment"># 报错！</span></span><br><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ systemctl reload nginx</span><br></pre></td></tr></table></figure>
+
+<h4 id="出现报错：Nginx-配置文件语法错误"><a href="#出现报错：Nginx-配置文件语法错误" class="headerlink" title="出现报错：Nginx 配置文件语法错误"></a>出现报错：Nginx 配置文件语法错误</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开wordpress.conf，查看第11行</span></span><br><span class="line">  1 server &#123;</span><br><span class="line">  2     listen 80;</span><br><span class="line">  3     server_name _;  <span class="comment"># 后续可以换成你的域名，现在用_代表匹配所有IP访问</span></span><br><span class="line">  4     root /usr/share/nginx/html;  <span class="comment"># 网站根目录，后续放WordPress程序</span></span><br><span class="line">  5     index index.html index.htm index.php;  <span class="comment"># 优先加载的首页文件，新增index.php优先级</span></span><br><span class="line">  6 </span><br><span class="line">  7     <span class="comment"># 处理PHP动态请求的核心配置</span></span><br><span class="line">  8     location ~ \.php$ &#123;</span><br><span class="line">  9         fastcgi_pass unix:/run/php/php8.1-fpm.sock;  <span class="comment"># 转发到PHP-FPM的本地socket（比TCP性能更高）</span></span><br><span class="line"> 10         fastcgi_index index.php;</span><br><span class="line"> 11         fastcgi_param SCRIPT_FILENAME ;      <span class="comment"># 问题非常明显，这里少了变量</span></span><br><span class="line"> 12         include fastcgi_params;  <span class="comment"># 加载fastcgi默认参数</span></span><br><span class="line"> 13     &#125;</span><br><span class="line"> 14 &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里是我对<strong>重定向</strong>和bash没掌握好导致的错误！这里用 vim 打开补上即可，关于这一部分的错误将另起一篇笔记来巩固知识点。</p>
+<ul>
+<li><input disabled="" type="checkbox"> 复习重定向、bash知识点</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ vim wordpress.conf</span><br><span class="line">...</span><br><span class="line">fastcgi_param SCRIPT_FILENAME $document_root<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">...</span><br><span class="line"><span class="comment"># 重新验证并重载：</span></span><br><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ nginx -t</span><br><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf <span class="built_in">test</span> is successful</span><br><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ systemctl reload nginx</span><br></pre></td></tr></table></figure>
+
+<h4 id="最终验证-LNMP-全链路"><a href="#最终验证-LNMP-全链路" class="headerlink" title="最终验证 LNMP 全链路"></a>最终验证 LNMP 全链路</h4><p>写一个 PHP 探针文件，验证【Nginx→PHP-FPM→MySQL】可以跑通。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 新建 PHP 探针文件</span></span><br><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ <span class="built_in">cat</span> &gt; /usr/share/nginx/html/info.php &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">&lt;?php</span></span><br><span class="line"><span class="string">phpinfo();</span></span><br><span class="line"><span class="string">?&gt;</span></span><br><span class="line"><span class="string">EOF</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>探针文件内容解析：</p>
+<p><code>&lt;?php ?&gt;</code> 是 PHP 代码的标准标记，告诉后端这是需要执行的 PHP 代码，而不是静态文本；</p>
+<p><code>phpinfo()</code> 是 PHP 官方内置的核心函数，执行后会<strong>输出当前 PHP 环境的完整配置信息（所以待会要马上删了！！！）</strong>，并自动排版为标准 HTML 格式。</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 本地服务器验证</span></span><br><span class="line">curl localhost/info.php     <span class="comment"># 会返回一大段配置信息的HTML代码，说明成功转发请求，PHP-FPM正确解析代码</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以公网访问验证：IP&#x2F;info. Php。如果<strong>验证失败</strong>的话，检查一下 nginx 默认的配置文件有没有删掉！或者备份：<code>root@lnmp-ops-web01:/etc/nginx/conf.d$ mv default.conf ~/backup/</code></p>
+<p>验证完记得删掉探针文件，避免泄露服务器配置信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:/etc/nginx/conf.d$ <span class="built_in">rm</span> -f /usr/share/nginx/html/info.php</span><br></pre></td></tr></table></figure>
+
+<p>至此，LNMP 架构搭建完成，下一步就是 WordPress 博客部署上线了。</p>
+<h1 id="最终交付阶段-：WordPress-个人博客全流程部署上线"><a href="#最终交付阶段-：WordPress-个人博客全流程部署上线" class="headerlink" title="最终交付阶段 ：WordPress 个人博客全流程部署上线"></a>最终交付阶段 ：WordPress 个人博客全流程部署上线</h1><h2 id="WordPress-部署"><a href="#WordPress-部署" class="headerlink" title="WordPress 部署"></a>WordPress 部署</h2><p>参考链接：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/document/product/213/8044">云服务器 手动搭建 WordPress 个人站点（Linux）_</a>、</p>
+<p><a target="_blank" rel="noopener" href="https://developer.wordpress.org/advanced-administration/">Advanced Administration Handbook | Developer.WordPress.org</a></p>
+<p>先决条件，保证 LNMP 架构搭建完成！</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 验证三大核心服务的状态</span></span><br><span class="line">root@lnmp-ops-web01:~$ systemctl is-active nginx php8.1-fpm mysql</span><br><span class="line">active</span><br><span class="line">active</span><br><span class="line">active</span><br></pre></td></tr></table></figure>
+
+<h3 id="为-WordPress-创建专属数据库和专用用户"><a href="#为-WordPress-创建专属数据库和专用用户" class="headerlink" title="为 WordPress 创建专属数据库和专用用户"></a>为 WordPress 创建专属数据库和专用用户</h3><p>这一步符合企业运维的<strong>最小权限原则</strong>：WordPress 只需要对自己的业务数据库有操作权限，而不能用 MySQL 管理员 root 账号。这样的话，哪怕网站被入侵，黑客也只能拿到这一业务库的数据，不会影响整个数据库服务器。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ mysql -u root -p</span><br><span class="line">Enter password: </span><br><span class="line">...</span><br><span class="line"><span class="comment"># 创建wp（WordPress，下文同）的专用数据库，字符集用utf8mb4（完美支持中文、emoji）</span></span><br><span class="line">mysql&gt; CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</span><br><span class="line">Query OK, 1 row affected (0.03 sec)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建wp专用数据库用户，仅允许本地登录，杜绝远程暴力破解风险</span></span><br><span class="line">mysql&gt; CREATE USER <span class="string">&#x27;wp_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;yourpasswd&#x27;</span>;</span><br><span class="line">Query OK, 0 rows affected (0.03 sec)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 给专用用户授予业务库的全权限，仅限制在wp库内</span></span><br><span class="line">mysql&gt; GRANT ALL PRIVILEGES ON wordpress.* TO <span class="string">&#x27;wp_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span>;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 刷新权限表，让配置立即生效</span></span><br><span class="line">mysql&gt; FLUSH PRIVILEGES;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="built_in">exit</span></span><br><span class="line">Bye</span><br></pre></td></tr></table></figure>
+
+<h3 id="下载-WordPress-官方最新版，部署到网站根目录"><a href="#下载-WordPress-官方最新版，部署到网站根目录" class="headerlink" title="下载 WordPress 官方最新版，部署到网站根目录"></a>下载 WordPress 官方最新版，部署到网站根目录</h3><p>进入网站根目录，移除默认的 index 文件，并下载官方压缩包：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:~$ <span class="built_in">cd</span> /usr/share/nginx/html/</span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ ll</span><br><span class="line">total 16</span><br><span class="line">drwxr-xr-x 2 www-data www-data 4096 Apr  8 19:02 ./</span><br><span class="line">drwxr-xr-x 3 root     root     4096 Apr  7 14:06 ../</span><br><span class="line">-rwxr-xr-x 1 www-data www-data  497 Mar 25 02:33 50x.html*</span><br><span class="line">-rwxr-xr-x 1 www-data www-data  615 Mar 25 02:33 index.html*</span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ <span class="built_in">mv</span> index.html ~/backup/nginx.index.html</span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ wget https://cn.wordpress.org/latest-zh_CN.tar.gz</span><br><span class="line">--2026-04-09 17:26:08--  https://cn.wordpress.org/latest-zh_CN.tar.gz</span><br><span class="line">Resolving cn.wordpress.org (cn.wordpress.org)... 198.143.164.252, 2607:f978:5:8002::c68f:a4fc</span><br><span class="line">Connecting to cn.wordpress.org (cn.wordpress.org)|198.143.164.252|:443... connected.</span><br><span class="line">HTTP request sent, awaiting response... 200 OK</span><br><span class="line">Length: 34316194 (33M) [application/octet-stream]</span><br><span class="line">Saving to: ‘latest-zh_CN.tar.gz’</span><br><span class="line"></span><br><span class="line">latest-zh_CN.tar.gz          100%[===========================================&gt;]  32.73M  8.41MB/s    <span class="keyword">in</span> 4.9s    </span><br><span class="line"></span><br><span class="line">2026-04-09 17:26:14 (6.72 MB/s) - ‘latest-zh_CN.tar.gz’ saved [34316194/34316194]</span><br></pre></td></tr></table></figure>
+
+<p>解压，并把程序文件放到根目录（这样可以少套一层 wordpress 目录）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ tar -zxvf latest-zh_CN.tar.gz</span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ <span class="built_in">mv</span> wordpress/* .</span><br><span class="line"><span class="comment"># 删掉冗余文件</span></span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ <span class="built_in">rm</span> -rf wordpress/ latest-zh_CN.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p><strong>权限修正</strong>！</p>
+<p>Nginx 和 PHP-FPM 都已 <code>www-data</code> 用户运行，所以也要给 wp 程序文件授予相应的归属和权限：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 把所有文件的归属权改为 www-data 用户和用户组</span></span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ <span class="built_in">chown</span> -R www-data:www-data /usr/share/nginx/html/</span><br><span class="line"><span class="comment"># 目录权限改为755，文件为644。符合Linux web服务安全规范</span></span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ find /usr/share/nginx/html/ -<span class="built_in">type</span> d -<span class="built_in">exec</span> <span class="built_in">chmod</span> 755 &#123;&#125; \;</span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ find /usr/share/nginx/html/ -<span class="built_in">type</span> f -<span class="built_in">exec</span> <span class="built_in">chmod</span> 644 &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+
+<p>文件权限的修改参考链接：<a target="_blank" rel="noopener" href="https://developer.wordpress.org/advanced-administration/security/hardening/#file-permissions">Hardening WordPress – Advanced Administration Handbook | Developer.WordPress.org</a> 详见于该文档下 <strong>File Permissions - Changing file permissions</strong>。</p>
+<h3 id="优化-Nginx-配置，适配-WordPress-核心需求"><a href="#优化-Nginx-配置，适配-WordPress-核心需求" class="headerlink" title="优化 Nginx 配置，适配 WordPress 核心需求"></a>优化 Nginx 配置，适配 WordPress 核心需求</h3><p>修改 nginx 的配置文件，之前写的基础配置只是为了实现 PHP 解析，而要让 wp 完美运行，还需要补充伪静态规则、安全防护、SEO 优化的企业级配置，作为这次简历里的亮点。</p>
+<p>备份并修改 wp 站点配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ <span class="built_in">cp</span> /etc/nginx/conf.d/wordpress.conf ~/backup/nginx.conf.d.wordpress.conf</span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ vim /etc/nginx/conf.d/wordpress.conf</span><br><span class="line">server &#123;</span><br><span class="line">    listen 80;</span><br><span class="line">    server_name _;  <span class="comment"># 后续绑定域名后，把_替换为域名即可</span></span><br><span class="line">    root /usr/share/nginx/html;</span><br><span class="line">    index index.php index.html index.htm;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># WordPress核心伪静态规则，支持SEO友好的固定链接，解决文章页面404问题</span></span><br><span class="line">    location / &#123;</span><br><span class="line">        try_files <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.php?<span class="variable">$args</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 禁止访问敏感文件，提升安全性</span></span><br><span class="line">    location ~* /wp-config.php|/wp-content/uploads/*.php|/readme.html|/license.txt &#123;</span><br><span class="line">        deny all;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 隐藏PHP版本号，减少攻击面</span></span><br><span class="line">    fastcgi_hide_header X-Powered-By;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># PHP动态请求转发核心配置</span></span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass unix:/run/php/php8.1-fpm.sock;</span><br><span class="line">        fastcgi_index index.php;</span><br><span class="line">        fastcgi_param SCRIPT_FILENAME $document_root<span class="variable">$fastcgi_script_name</span>;</span><br><span class="line">        include fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 静态资源缓存优化，提升网站访问速度</span></span><br><span class="line">    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ &#123;</span><br><span class="line">        expires 30d;</span><br><span class="line">        add_header Cache-Control <span class="string">&quot;public, no-transform&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 错误页面配置</span></span><br><span class="line">    error_page 500 502 503 504 /50x.html;</span><br><span class="line">    location = /50x.html &#123;</span><br><span class="line">        root /usr/share/nginx/html;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>验证语法无误后，重载 nginx 生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ nginx -t</span><br><span class="line">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok</span><br><span class="line">nginx: configuration file /etc/nginx/nginx.conf <span class="built_in">test</span> is successful</span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ systemctl reload nginx</span><br></pre></td></tr></table></figure>
+
+<h2 id="网页端初始化WordPress"><a href="#网页端初始化WordPress" class="headerlink" title="网页端初始化WordPress"></a>网页端初始化WordPress</h2><p>1、打开浏览器，输入服务器公网 IP，进入 wp 安装引导页。如图：<br><img src="/images/wp%E6%AC%A2%E8%BF%8E%E9%A1%B5.png" alt="wp欢迎页"></p>
+<p>2、填写数据库连接信息：</p>
+<p>数据库名：wordpress</p>
+<p>用户名：wp_user</p>
+<p>密码：之前设置的专用用户强密码</p>
+<p>数据库主机：localhost</p>
+<p>表前缀：默认 wp_即可</p>
+<h4 id="密码出错！"><a href="#密码出错！" class="headerlink" title="密码出错！"></a>密码出错！</h4><p><img src="/images/wp%E5%AF%86%E7%A0%81%E5%87%BA%E9%94%99.png" alt="wp密码出错"></p>
+<p>把当时设置的密码和用户名给 ai 分析之后找到了原因：</p>
+<p><strong>密码带尖括号了</strong>，这是 HTML&#x2F;PHP 的标签标识符，WordPress 的 web 表单在接受和处理密码时，把尖括号当成 HTML 标签处理，要么自动转义成 <code>&amp;lt;/&amp;gt;</code>，要么直接过滤，导致提交的密码和当初设置的不一样。</p>
+<p><strong>解决方案</strong>：</p>
+<p>修改 <code>wp_user</code> 的密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; ALTER USER <span class="string">&#x27;wp_user&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED BY <span class="string">&#x27;yourpasswd&#x27;</span>;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; FLUSH PRIVILEGES;</span><br><span class="line">Query OK, 0 rows affected (0.01 sec)</span><br></pre></td></tr></table></figure>
+
+<p>验证密码有效性：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ mysql -u wp_user -p<span class="string">&#x27;yourpasswd&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>回到网站重新提交就可以了。</p>
+<p>3、提交-运行安装程序</p>
+<p>4、填写站点信息</p>
+<p>站点标题：博客名称</p>
+<p>用户名：博客后台的管理员账号</p>
+<p>密码：后台登录的强密码，务必牢记</p>
+<p>电子邮箱：密码找回、站点通知</p>
+<p>搜索引擎可见性：先勾选，内容完善后再开启。</p>
+<p>5、点击安装</p>
+<h3 id="上线验证与安全收尾"><a href="#上线验证与安全收尾" class="headerlink" title="上线验证与安全收尾"></a>上线验证与安全收尾</h3><p>前台访问：访问公网 ip，无报错、无样式丢失。</p>
+<p>后台访问：访问`http:&#x2F;&#x2F;ip&#x2F;wp-admin，管理员账号密码登录，可正常发布文件、安装主题插件即可。</p>
+<p><strong>安全首位</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除wp安装脚本，避免被恶意利用</span></span><br><span class="line">root@lnmp-ops-web01:/usr/share/nginx/html$ <span class="built_in">rm</span> -f /usr/share/nginx/html/wp-admin/install.php</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>至此，项目完成！</strong></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>HT
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://haitao-lian.github.io/2026/04/13/%E5%9F%BA%E4%BA%8ELNMP%E6%9E%B6%E6%9E%84%E6%90%AD%E5%BB%BAWordPress%E5%8D%9A%E5%AE%A2/" title="基于LNMP架构搭建WordPress博客">http://haitao-lian.github.io/2026/04/13/基于LNMP架构搭建WordPress博客/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <span class="social-link">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </span>
+
+          <img class="social-item-img" src="/images/wechat_channel.png">
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/LNMP/" rel="tag"><i class="fa fa-tag"></i> LNMP</a>
+              <a href="/tags/WordPress/" rel="tag"><i class="fa fa-tag"></i> WordPress</a>
+              <a href="/tags/%E6%9C%8D%E5%8A%A1%E6%90%AD%E5%BB%BA/" rel="tag"><i class="fa fa-tag"></i> 服务搭建</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/13/vim%E6%AD%A3%E5%88%99%E6%9B%BF%E6%8D%A2%E2%80%94%E2%80%94%E5%88%86%E7%BB%84%E5%A4%8D%E7%94%A8/" rel="prev" title="vim正则替换——分组复用">
+                  <i class="fa fa-angle-left"></i> vim正则替换——分组复用
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-dumbbell"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">HT</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
