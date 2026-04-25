@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"haitao-lian.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="前言在 Linux 上搭建服务的时候，经常会遇到各种各样的故障、异常和告警，为了更好的排错，我整理了以下查看服务状态与日志的基本思路。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux查看服务状态和日志.md">
+<meta property="og:url" content="http://haitao-lian.github.io/2026/04/24/Linux%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81%E5%92%8C%E6%97%A5%E5%BF%97/index.html">
+<meta property="og:site_name" content="HT&#39;s Blog">
+<meta property="og:description" content="前言在 Linux 上搭建服务的时候，经常会遇到各种各样的故障、异常和告警，为了更好的排错，我整理了以下查看服务状态与日志的基本思路。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-04-24T11:42:23.000Z">
+<meta property="article:modified_time" content="2026-04-25T17:38:34.112Z">
+<meta property="article:author" content="HT">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://haitao-lian.github.io/2026/04/24/Linux%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81%E5%92%8C%E6%97%A5%E5%BF%97/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/04/24/Linux%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81%E5%92%8C%E6%97%A5%E5%BF%97/","path":"2026/04/24/Linux查看服务状态和日志/","title":"Linux查看服务状态和日志.md"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Linux查看服务状态和日志.md | HT's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">HT's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#systemctl-status-%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81"><span class="nav-number">2.</span> <span class="nav-text">systemctl status 查看服务状态</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E6%9F%A5%E7%9C%8B%E6%97%A5%E5%BF%97%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-number">3.</span> <span class="nav-text">两种查看日志的方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#journalctl-%E6%9F%A5%E7%9C%8B%E5%85%B7%E4%BD%93%E9%94%99%E8%AF%AF"><span class="nav-number">3.1.</span> <span class="nav-text">journalctl 查看具体错误</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#var-log-%E7%9B%AE%E5%BD%95%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">&#x2F;var&#x2F;log&#x2F; 目录日志文件</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HT"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">HT</p>
+  <div class="site-description" itemprop="description">Fittness</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/04/24/Linux%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81%E5%92%8C%E6%97%A5%E5%BF%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="HT">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HT's Blog">
+      <meta itemprop="description" content="Fittness">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Linux查看服务状态和日志.md | HT's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux查看服务状态和日志.md
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2026-04-24 19:42:23" itemprop="dateCreated datePublished" datetime="2026-04-24T19:42:23+08:00">2026-04-24</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2026-04-26 01:38:34" itemprop="dateModified" datetime="2026-04-26T01:38:34+08:00">2026-04-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">技术笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在 Linux 上搭建服务的时候，经常会遇到各种各样的故障、异常和告警，为了更好的排错，我整理了以下查看服务状态与日志的基本思路。</p>
+<span id="more"></span>
+
+<h2 id="systemctl-status-查看服务状态"><a href="#systemctl-status-查看服务状态" class="headerlink" title="systemctl status 查看服务状态"></a>systemctl status 查看服务状态</h2><p>首先，通过 <code>systemctl status</code> 查看服务的当前状态，以及该服务最近几条相关日志摘要。适合作为第一轮判断：服务是否正在运行、是否设置为开机自启、主进程是谁、最近一次启动&#x2F;停止有没有明显报错，从而判断是否需要继续深挖日志。</p>
+<p>先给例子：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@lnmp-ops-web01:~$ systemctl status nginx</span><br><span class="line">● nginx.service - nginx - high performance web server</span><br><span class="line">     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)</span><br><span class="line">     Active: active (running) since Wed 2026-04-22 16:45:14 CST; 2 days ago</span><br><span class="line">       Docs: https://nginx.org/en/docs/</span><br><span class="line">   Main PID: 917 (nginx)</span><br><span class="line">      Tasks: 3 (<span class="built_in">limit</span>: 2216)</span><br><span class="line">     Memory: 6.1M</span><br><span class="line">        CPU: 273ms</span><br><span class="line">     CGroup: /system.slice/nginx.service</span><br><span class="line">             ├─917 <span class="string">&quot;nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx.conf&quot;</span></span><br><span class="line">             ├─927 <span class="string">&quot;nginx: worker process&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span></span><br><span class="line">             └─928 <span class="string">&quot;nginx: worker process&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span> <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">Apr 22 16:45:14 lnmp-ops-web01 systemd[1]: Starting nginx - high performance web server...</span><br><span class="line">Apr 22 16:45:14 lnmp-ops-web01 systemd[1]: nginx.service: Can<span class="string">&#x27;t open PID file /run/nginx.pid (yet?) after start: Operation not permitted</span></span><br><span class="line"><span class="string">Apr 22 16:45:14 lnmp-ops-web01 systemd[1]: Started nginx - high performance web server.</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+
+<p><strong>核心字段</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+<th>关键判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Loaded</td>
+<td>unit 文件是否被 systemd 正常加载（loaded）、开机自启动</td>
+<td>enabled&#x3D;开机自启; disabled 反之</td>
+</tr>
+<tr>
+<td>Active</td>
+<td>当前运行状态</td>
+<td><code>active (running)</code>&#x3D; 正常运行；<code>inactive (dead)</code>&#x3D; 已停止；<code>failed</code>&#x3D; 启动失败</td>
+</tr>
+<tr>
+<td>Main PID</td>
+<td>主进程 ID</td>
+<td>用于后续排查进程资源占用</td>
+</tr>
+<tr>
+<td>末尾日志那段</td>
+<td>服务最近的报错&#x2F;运行日志</td>
+<td>启动失败时，这里会直接显示核心报错原因</td>
+</tr>
+</tbody></table>
+<p><code>systemctl status</code> 底部展示的几行内容，本质上也是该服务在 journal 中最近的日志摘要，有固定的通用格式和判断规则。<br><strong>日志的固定字段结构</strong>：<br>[时间戳] [主机名] [产生日志的进程名[PID]]: [日志正文]<br>它们的关键作用：</p>
+<ul>
+<li>时间戳：定位问题发生的时间，梳理时间的先后顺序</li>
+<li>主机名：多机器场景下，确认是哪台服务器产生的日志</li>
+<li>产生日志的进程名[PID]：核心！区分日志的来源：<ul>
+<li><code>systemd[1]</code>：系统 1 号进程，服务管理器，记录的是<strong>服务的生命周期（启动、停止、重启）</strong>，属于服务的“外部状态日志”</li>
+<li>比如 <code>nginx[917]/mysql[1107]</code>：服务自身的进程，记录的是<strong>程序内部的运行情况</strong>（配置加载、客户端连接、程序报错等），属于服务的“内部运行日志”</li>
+<li>日志正文：告诉你具体发生了什么事，是判断问题的核心</li>
+</ul>
+</li>
+</ul>
+<p>一般来说，想通过 <code>systemctl status </code> 给出的日志来判断问题的严重程度有三个步骤：<br><strong>一、先看 <code>Active</code> 和日志最后一行，清楚服务的状态</strong></p>
+<ul>
+<li>只要 Active 是 <code>active(running)</code>，然后日志也显示 <code>Started xxx</code>，那么中间的警告或报错在<strong>当前大概率</strong>不是致命问题，但仍虚结合访问验证或进一步查看日志，确认业务功能是否完全正常。</li>
+<li>Active 是 <code>inactive(dead)</code>，然后日志显示 <code>Failed to start xxx</code> 的话，那就是启动失败。<br><strong>二、看日志的来源</strong></li>
+<li>比如来源是 <code>systemd[1]</code>：那就说明问题更偏向于服务生命周期和 systemd 视角，比如启动权限不足、端口占用、PID 文件异常、服务文件配置错误等等。</li>
+<li>来源是 <code>nginx[917]/mysql[1107]</code>：问题更偏向于程序内部执行细节，比如配置文件语法错误、数据库密码不对、连接数超限、文件读写权限不足等。<br><strong>三、通过关键词识别事件类型</strong><blockquote>
+<p>这些关键词适合做快速判断，但不能替代完整日志分析。</p>
+</blockquote>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="left">日志关键词</th>
+<th align="left">含义</th>
+<th align="left">状态判断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>Starting xxx</code></td>
+<td align="left">开始启动 xxx 服务</td>
+<td align="left">流程启动，中性通知</td>
+</tr>
+<tr>
+<td align="left"><code>Started xxx</code></td>
+<td align="left">成功启动 xxx 服务</td>
+<td align="left">启动完成，服务正常</td>
+</tr>
+<tr>
+<td align="left"><code>Stopping xxx</code></td>
+<td align="left">开始停止 xxx 服务</td>
+<td align="left">停止流程启动，中性通知</td>
+</tr>
+<tr>
+<td align="left"><code>Stopped xxx</code></td>
+<td align="left">成功停止 xxx 服务</td>
+<td align="left">停止完成，中性通知</td>
+</tr>
+<tr>
+<td align="left"><code>Failed to start xxx</code></td>
+<td align="left">启动 xxx 服务失败</td>
+<td align="left">严重错误，服务未启动</td>
+</tr>
+<tr>
+<td align="left"><code>Main process exited, code=exited</code></td>
+<td align="left">服务主进程异常退出</td>
+<td align="left">严重错误，服务崩溃</td>
+</tr>
+</tbody></table>
+<p>这里补充日志的优先级：<br><code>emerg(紧急)</code> &gt; <code>alert(警报)</code> &gt; <code>crit(严重)</code> &gt; <code>err(错误)</code> &gt; <code>warn(警告)</code> &gt; <code>notice(通知)</code> &gt; <code>info(信息)</code> &gt; <code>debug(调试)</code><br><code>systemctl status</code> 默认只展示<strong>这个 unit 最近的若干条日志摘要</strong>。</p>
+<h2 id="两种查看日志的方式"><a href="#两种查看日志的方式" class="headerlink" title="两种查看日志的方式"></a>两种查看日志的方式</h2><p>刚刚的 <code>systemctl status</code> 只是看服务的状态和几条最近的日志，只是一个概览，要想全面地深挖具体报错的细节，还得靠完整日志。<br>常见地查看日志的方式有 <code>journalctl</code> 命令和日志文件。</p>
+<h3 id="journalctl-查看具体错误"><a href="#journalctl-查看具体错误" class="headerlink" title="journalctl 查看具体错误"></a>journalctl 查看具体错误</h3><p> <code>journalctl</code>。<br>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">ubuntu@lnmp-ops-web01:~$ journalctl -u nginx -r</span><br><span class="line">Apr 22 16:45:14 lnmp-ops-web01 systemd[1]: Started nginx - high performance web server.</span><br><span class="line">Apr 22 16:45:14 lnmp-ops-web01 systemd[1]: nginx.service: Can<span class="string">&#x27;t open PID file /run/nginx.pid (yet?) after start: Operation not permitted</span></span><br><span class="line"><span class="string">Apr 22 16:45:14 lnmp-ops-web01 systemd[1]: Starting nginx - high performance web server...</span></span><br><span class="line"><span class="string">-- Boot 6bc78ac43f2c4607863a34cd811c4361 --</span></span><br><span class="line"><span class="string">Apr 09 18:06:21 lnmp-ops-web01 systemd[1]: Reloaded nginx - high performance web server.</span></span><br><span class="line"><span class="string">Apr 09 18:06:21 lnmp-ops-web01 systemd[1]: Reloading nginx - high performance web server...</span></span><br><span class="line"><span class="string">Apr 08 18:56:53 lnmp-ops-web01 systemd[1]: Reloaded nginx - high performance web server.</span></span><br><span class="line"><span class="string">Apr 08 18:56:53 lnmp-ops-web01 systemd[1]: Reloading nginx - high performance web server...</span></span><br><span class="line"><span class="string">Apr 08 18:38:48 lnmp-ops-web01 systemd[1]: Reloaded nginx - high performance web server.</span></span><br><span class="line"><span class="string">Apr 08 18:38:48 lnmp-ops-web01 systemd[1]: Reloading nginx - high performance web server...</span></span><br><span class="line"><span class="string">Apr 08 18:27:19 lnmp-ops-web01 systemd[1]: Reloaded nginx - high performance web server.</span></span><br><span class="line"><span class="string">Apr 08 18:27:19 lnmp-ops-web01 systemd[1]: Reloading nginx - high performance web server...</span></span><br><span class="line"><span class="string">Apr 08 18:19:05 lnmp-ops-web01 systemd[1]: Reloaded nginx - high performance web server.</span></span><br><span class="line"><span class="string">Apr 08 18:19:05 lnmp-ops-web01 systemd[1]: Reloading nginx - high performance web server...</span></span><br><span class="line"><span class="string">Apr 07 14:09:31 lnmp-ops-web01 systemd[1]: Started nginx - high performance web server.</span></span><br><span class="line"><span class="string">Apr 07 14:09:31 lnmp-ops-web01 systemd[1]: nginx.service: Can&#x27;</span>t open PID file /run/nginx.pid (yet?) after start: Operation not permitted</span><br><span class="line">Apr 07 14:09:31 lnmp-ops-web01 systemd[1]: Starting nginx - high performance web server...</span><br></pre></td></tr></table></figure>
+<p>输出内容的格式和 <code>systemctl status</code> 最后几行的一样，但可以通过命令参数灵活查看日志：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1. 实时刷新指定服务的日志，-f的效果等价于tail -f</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u 服务名 -f</span><br><span class="line"></span><br><span class="line"><span class="comment"># 2. 查看指定服务最近N行日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u 服务名 -n 10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 3. 查看指定服务今天的所有日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u 服务名 --since today</span><br><span class="line"></span><br><span class="line"><span class="comment"># 4. 查看指定时间段的日志</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u 服务名 --since <span class="string">&quot;2026-04-24 10:00:00&quot;</span> --<span class="keyword">until</span> <span class="string">&quot;2026-04-24 16:00:00&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 5. 只看服务的 err 级别及以上的日志（过滤无效信息）</span></span><br><span class="line"><span class="built_in">sudo</span> journalctl -u 服务名 -p err</span><br><span class="line"><span class="comment"># 级别可选：emerg(紧急)、alert、crit(严重)、err(错误)、warning(警告)、notice、info、debug</span></span><br></pre></td></tr></table></figure>
+
+<p>其他参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-r</code></td>
+<td>倒序输出，最新日志在最顶部</td>
+</tr>
+<tr>
+<td><code>--no-pager</code></td>
+<td>直接全量输出，不分页</td>
+</tr>
+<tr>
+<td><code>-o short-iso</code></td>
+<td>显示标准 ISO 格式时间，方便排查时间线</td>
+</tr>
+<tr>
+<td><code>--boot</code></td>
+<td>只看本次开机以来的日志</td>
+</tr>
+</tbody></table>
+<h3 id="var-log-目录日志文件"><a href="#var-log-目录日志文件" class="headerlink" title="&#x2F;var&#x2F;log&#x2F; 目录日志文件"></a>&#x2F;var&#x2F;log&#x2F; 目录日志文件</h3><p>这个目录下的日志主要分为两类，一种是系统级的日志文件，一种是由应用自主写入的业务日志。当 <code>journalctl</code> 不够用，或者要看应用访问日志&#x2F;错误日志时，就需要再去 <code>/var/log/...</code> 对应目录找对应日志。</p>
+<p>一般来说，系统服务层（启动失败、异常退出、systemd 报错、资源&#x2F;权限问题、内核&#x2F;认证事件）优先选 <code>journalctl</code>。如果问题已经落到应用层，就进一步分析该应用对应的日志文件，例如应用的访问日志、报错日志和慢查询日志。</p>
+<p>系统核心的通用日志有：</p>
+<table>
+<thead>
+<tr>
+<th>日志路径</th>
+<th>适用系统</th>
+<th>日志内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/var/log/messages</code></td>
+<td>红帽系</td>
+<td>系统整体运行日志、绝大多数服务的常规信息</td>
+</tr>
+<tr>
+<td><code>/var/log/syslog</code></td>
+<td>Debian 系</td>
+<td>对应红帽系的 messages，系统全局日志</td>
+</tr>
+<tr>
+<td><code>/var/log/secure</code></td>
+<td>红帽系</td>
+<td>安全认证日志：ssh 登录、sudo 权限、用户变更等</td>
+</tr>
+<tr>
+<td><code>/var/log/auth.log</code></td>
+<td>Debian 系</td>
+<td>对应红帽系的 secure，认证安全日志</td>
+</tr>
+<tr>
+<td><code>/var/log/cron</code></td>
+<td>全系统通用</td>
+<td>定时任务 crontab 的执行日志，排查定时任务失败</td>
+</tr>
+<tr>
+<td><code>/var/log/dmesg</code></td>
+<td>全系统通用</td>
+<td>内核启动、硬件驱动相关日志，排查硬件 &#x2F; 内核问题</td>
+</tr>
+</tbody></table>
+<p>常见服务专属日志路径：</p>
+<table>
+<thead>
+<tr>
+<th>服务</th>
+<th>标准日志路径</th>
+<th>核心日志文件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Nginx</td>
+<td><code>/var/log/nginx/</code></td>
+<td><code>access.log</code>（访问日志）、<code>error.log</code>（错误日志）</td>
+</tr>
+<tr>
+<td>Apache&#x2F;httpd</td>
+<td>红帽系 <code>/var/log/httpd/</code>；Debian 系 <code>/var/log/apache2/</code></td>
+<td>访问日志、错误日志</td>
+</tr>
+<tr>
+<td>MySQL&#x2F;MariaDB</td>
+<td><code>/var/log/mariadb/</code>、<code>/var/log/mysql/</code></td>
+<td>错误日志、慢查询日志</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td><code>/var/log/postgresql/</code></td>
+<td>实例运行日志</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>比较特殊，容器日志一般在 <code>/var/lib/docker/containers</code>，服务运行日志用 <code>journalctl -u docker</code></td>
+<td>容器运行日志，也可用 <code>journalctl -u docker</code></td>
+</tr>
+<tr>
+<td><strong>通常用于查看日志文件的命令</strong>：</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"># 1. 实时刷新日志文件（最常用，跟踪实时请求/报错）</span><br><span class="line">sudo tail -f 日志文件路径</span><br><span class="line"># 示例：实时看nginx错误日志</span><br><span class="line">sudo tail -f /var/log/nginx/error.log</span><br><span class="line"></span><br><span class="line"># 2. 查看日志文件最后N行</span><br><span class="line">sudo tail -n 200 日志文件路径</span><br><span class="line"></span><br><span class="line"># 3. 分页查看大日志文件（支持搜索、翻页，按q退出）</span><br><span class="line">sudo less 日志文件路径</span><br><span class="line"># 技巧：less中输入 /关键词 可搜索内容，n跳转到下一个匹配项</span><br><span class="line"></span><br><span class="line"># 4. 过滤日志中的关键词（精准定位报错）</span><br><span class="line">sudo grep &quot;关键词&quot; 日志文件路径</span><br><span class="line"># 常用参数：</span><br><span class="line"># -i 忽略大小写；-v 排除关键词；-n 显示行号</span><br><span class="line"># 示例：过滤secure日志中所有登录失败的记录</span><br><span class="line">sudo grep -i &quot;failed password&quot; /var/log/secure</span><br><span class="line"></span><br><span class="line"># 5. 组合命令：实时过滤日志中的500错误</span><br><span class="line">sudo tail -f /var/log/nginx/error.log | grep &quot;500&quot;</span><br><span class="line"></span><br><span class="line"># 查看压缩日志内容</span><br><span class="line">sudo zcat 日志文件.gz</span><br><span class="line"># 分页查看压缩日志</span><br><span class="line">sudo zless 日志文件.gz</span><br><span class="line"># 过滤压缩日志中的关键词</span><br><span class="line">sudo zgrep &quot;关键词&quot; 日志文件.gz</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>HT
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://haitao-lian.github.io/2026/04/24/Linux%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E7%8A%B6%E6%80%81%E5%92%8C%E6%97%A5%E5%BF%97/" title="Linux查看服务状态和日志.md">http://haitao-lian.github.io/2026/04/24/Linux查看服务状态和日志/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <span class="social-link">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </span>
+
+          <img class="social-item-img" src="/images/wechat_channel.png">
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/04/21/shell%E8%AF%AD%E6%B3%95%E5%A4%8D%E4%B9%A0/" rel="prev" title="shell语法复习">
+                  <i class="fa fa-angle-left"></i> shell语法复习
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-dumbbell"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">HT</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
