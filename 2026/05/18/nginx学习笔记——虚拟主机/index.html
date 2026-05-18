@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"haitao-lian.github.io","root":"/","images":"/images","scheme":"Mist","darkmode":false,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="总结了 nginx 是如何匹配虚拟主机，以及虚拟主机的配置语法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="nginx学习笔记——虚拟主机">
+<meta property="og:url" content="http://haitao-lian.github.io/2026/05/18/nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/index.html">
+<meta property="og:site_name" content="HT&#39;s Blog">
+<meta property="og:description" content="总结了 nginx 是如何匹配虚拟主机，以及虚拟主机的配置语法。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-18T11:33:25.000Z">
+<meta property="article:modified_time" content="2026-05-18T11:35:12.973Z">
+<meta property="article:author" content="HT">
+<meta property="article:tag" content="nginx">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://haitao-lian.github.io/2026/05/18/nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://haitao-lian.github.io/2026/05/18/nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/","path":"2026/05/18/nginx学习笔记——虚拟主机/","title":"nginx学习笔记——虚拟主机"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>nginx学习笔记——虚拟主机 | HT's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">HT's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA-virtual-server"><span class="nav-number">1.</span> <span class="nav-text">虚拟主机 virtual server</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#How-nginx-processes-a-request"><span class="nav-number">1.1.</span> <span class="nav-text">How nginx processes a request</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Name-based-virtual-server"><span class="nav-number">1.1.1.</span> <span class="nav-text">Name-based virtual server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#How-to-prevent-processing-requests-with-undefined-server-names"><span class="nav-number">1.1.2.</span> <span class="nav-text">How to prevent processing requests with undefined server names</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Mixed-name-based-and-IP-based-virtual-servers"><span class="nav-number">1.1.3.</span> <span class="nav-text">Mixed name-based and IP-based virtual servers</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#A-simple-PHP-site-configuration"><span class="nav-number">1.1.4.</span> <span class="nav-text">A simple PHP site configuration</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Server-names"><span class="nav-number">1.2.</span> <span class="nav-text">Server names</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%80%9A%E9%85%8D%E7%AC%A6%E5%90%8D%E7%A7%B0"><span class="nav-number">1.2.1.</span> <span class="nav-text">通配符名称</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%90%8D%E7%A7%B0"><span class="nav-number">1.2.2.</span> <span class="nav-text">正则表达式名称</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HT"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">HT</p>
+  <div class="site-description" itemprop="description">Fittness</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://haitao-lian.github.io/2026/05/18/nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="HT">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HT's Blog">
+      <meta itemprop="description" content="Fittness">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="nginx学习笔记——虚拟主机 | HT's Blog">
+      <meta itemprop="description" content="总结了 nginx 是如何匹配虚拟主机，以及虚拟主机的配置语法。">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          nginx学习笔记——虚拟主机
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2026-05-18 19:33:25 / 修改时间：19:35:12" itemprop="dateCreated datePublished" datetime="2026-05-18T19:33:25+08:00">2026-05-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">技术笔记</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+            <div class="post-description">总结了 nginx 是如何匹配虚拟主机，以及虚拟主机的配置语法。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>参考链接：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/request_processing.html">How nginx processes a request</a></li>
+<li><a target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/server_names.html">Server names</a></li>
+</ul>
+<h2 id="虚拟主机-virtual-server"><a href="#虚拟主机-virtual-server" class="headerlink" title="虚拟主机 virtual server"></a>虚拟主机 virtual server</h2><p>什么是虚拟主机？</p>
+<p>虚拟主机为什么重要？</p>
+<p>什么时候需要虚拟主机？</p>
+<p>怎么设置虚拟主机？</p>
+<h3 id="How-nginx-processes-a-request"><a href="#How-nginx-processes-a-request" class="headerlink" title="How nginx processes a request"></a>How nginx processes a request</h3><p>此文档主要讲 nginx  如何挑选虚拟主机。</p>
+<h4 id="Name-based-virtual-server"><a href="#Name-based-virtual-server" class="headerlink" title="Name-based virtual server"></a>Name-based virtual server</h4><p>基于名称的虚拟主机</p>
+<p>以下面的配置举例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen      80;</span><br><span class="line">    server_name example.org www.example.org;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen      80;</span><br><span class="line">    server_name example.net www.example.net;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen      80;</span><br><span class="line">    server_name example.com www.example.com;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个配置中，三个虚拟主机都监听同一个IP和端口，所以 nginx 只去匹配请求的 Host 头字段，来确定请求路由到哪个虚拟主机。</p>
+<p>如果匹配不到任何 <code>server</code>，nginx 就会将请求路由到这个端口的默认服务器。在这个配置中，默认是第一个 <code>server</code>。</p>
+<p>也可以使用 <code>listen</code> 语句中的 <code>default_server</code> 参数来指定默认 <code>server</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen      80 default_server;</span><br><span class="line">    server_name example.net www.example.net;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="How-to-prevent-processing-requests-with-undefined-server-names"><a href="#How-to-prevent-processing-requests-with-undefined-server-names" class="headerlink" title="How to prevent processing requests with undefined server names"></a>How to prevent processing requests with undefined server names</h4><p>如何防止处理未定义虚拟主机名称的请求？</p>
+<p>对于没有指定头字段的请求，要想丢弃它们，可以如此设置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen      80;</span><br><span class="line">    server_name &quot;&quot;;</span><br><span class="line">    return      444;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里把服务器名称设置为空字符，代表匹配没有 Host 头字段的请求，并返回一个特殊的非标准代码 444 来关闭连接。</p>
+<blockquote>
+<p>从 0.8.48 版本开始，这是服务器名称的默认设置，因此可以省略 <code>server_name &quot;&quot;</code>。<br>早期版本则是将机器的 hostname 作为默认服务器名称。</p>
+</blockquote>
+<h4 id="Mixed-name-based-and-IP-based-virtual-servers"><a href="#Mixed-name-based-and-IP-based-virtual-servers" class="headerlink" title="Mixed name-based and IP-based virtual servers"></a>Mixed name-based and IP-based virtual servers</h4><p>基于名称同时基于 IP 的虚拟主机</p>
+<p>接下来是更复杂的配置，其中有一个虚拟主机在不同的 IP 上监听：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen      192.168.1.1:80;</span><br><span class="line">    server_name example.org www.example.org;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen      192.168.1.1:80;</span><br><span class="line">    server_name example.net www.example.net;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen      192.168.1.2:80;</span><br><span class="line">    server_name example.com www.example.com;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个配置中，nginx 首先测试 IP 和端口是否和 <code>server</code> 块中 listen 指令进行比对。然后测试请求的 Host 头字段是否和匹配上 IP:端口server_name 对应上，如果找不到对应的 server_name，则该请求将被默认服务器处理。<br>比如 <code>192.168.1.1:80</code> 收到 <code>www.example.com</code>，那么该请求将被默认虚拟主机处理，亦即第一台。<br>同样地，也可以用 <code>default_server</code> 参数来设置默认虚拟主机。</p>
+<h4 id="A-simple-PHP-site-configuration"><a href="#A-simple-PHP-site-configuration" class="headerlink" title="A simple PHP site configuration"></a>A simple PHP site configuration</h4><p>一个简单的 PHP 网站配置</p>
+<p>接下来给出一个 nginx 如何选择 <code>location</code> 来处理一个经典的 PHP 网站的请求：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen      80;</span><br><span class="line">    server_name example.org www.example.org;</span><br><span class="line">    root        /data/www;</span><br><span class="line"></span><br><span class="line">    location / &#123;</span><br><span class="line">        index   index.html index.php;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~* \.(gif|jpg|png)$ &#123;</span><br><span class="line">        expires 30d;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    location ~ \.php$ &#123;</span><br><span class="line">        fastcgi_pass  localhost:9000;</span><br><span class="line">        fastcgi_param SCRIPT_FILENAME</span><br><span class="line">                      $document_root$fastcgi_script_name;</span><br><span class="line">        include       fastcgi_params;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>nginx 在找 <code>location</code> 时，首先会把前缀字符串记住（比如<code>/</code>），然后再去查看正则匹配，第一个正则被匹配到则停止搜索，nginx 将直接使用这个 <code>location</code>。<br>如果所有正则都匹配不到，则使用之前找到的最长（最具体）的前缀字符串 <code>location</code>。</p>
+<p>需要注意的是，这些匹配只会检查请求行的 URI 部分，不会去看参数（QUERY-STRING）。因为 QUERY-STRING 的参数可以以多种方式来提供，写太多匹配会降低性能（我目前的理解）。</p>
+<p>接下来举几个例子说明这个配置的 nginx 会如何处理请求：</p>
+<ul>
+<li>请求 “&#x2F;logo.gif” 首先与 <code>/</code> 前缀的 location 匹配，然后再和 <code>\.(gif|jpg|png)$</code> 正则匹配，所以最后由后者进行处理。再根据 root 指令，把请求映射到文件 <code>/data/www/logo.gif</code>，并将文件发送给客户端。</li>
+<li>请求 “&#x2F;index.php” 首先也是匹配 <code>location /</code>，再去匹配正则，因此被后者处理。并把请求传递给9000端口的 FastCGI 服务器，fastcgi_param 指令把 FastCGI 参数 SCRIPT_FILENAME 设置为 “&#x2F;data&#x2F;www&#x2F;index.php”，然后 FastCGI 服务器执行该文件。<ul>
+<li>变量 $document_root 的值等于 root 指令的值</li>
+<li>变量 $fastcgi_script_name 的值等于请求 URI</li>
+</ul>
+</li>
+<li>请求 <code>/</code> 更复杂一些。它仅与 <code>location /</code> 匹配。该 location 中的 index 指令将根据参数去 root 下检索文件是否存在。在这个例子中，如果 root 下只有 index.php 文件的话，这个指令会执行一次内部重定向，最后 nginx 会像处理新发来的请求那样重新搜索 location。最后重定向的请求由 FastCGI 服务器处理。</li>
+</ul>
+<h3 id="Server-names"><a href="#Server-names" class="headerlink" title="Server names"></a>Server names</h3><p>此文档主要讲 <code>server_name</code> 指令的语法细节（精确名、通配符、正则、优先级等等）。</p>
+<p>虚拟主机的名称由 <code>server_name</code> 指令来定义，并指定哪个 <code>server</code> 块来处理请求。<br>他们可以用精确名称、通配符、正则表达式来命名：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  example.org  www.example.org;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  *.example.org;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  mail.*;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  ~^(?&lt;user&gt;.+)\.example\.net$;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>寻找虚拟主机为按照以下优先顺序，在匹配到第一个是定制寻找：</p>
+<ol>
+<li>精确名称</li>
+<li>最长前缀星号通配符名称，比如：<code>*.example.org</code></li>
+<li>最长后缀星号通配符名称，比如：<code>mail.*</code></li>
+<li>第一个匹配到的正则表达式名称（按顺序）</li>
+</ol>
+<blockquote>
+<p>注意：<br>假如配置文件中，正则表达式写在精确名称之前，nginx 也只会在确认完所有精确名称才会去查看正则表达式。<br>但正则表达式只要匹配到第一个，后面就不会再去查看了。</p>
+</blockquote>
+<h4 id="通配符名称"><a href="#通配符名称" class="headerlink" title="通配符名称"></a>通配符名称</h4><p>通配符名称只能在名称的开头或结尾包含星号，且星号必须和点号相邻。例如<code>www.*.example.org</code> 和 <code>w*.example.org</code> 就是无效的。<br>一个星号可以匹配多个域名片段：<code>*.example.org</code> 不仅匹配 <code>www.example.org</code>，还匹配 <code>www.sub.example.org</code>。</p>
+<p>还有一种特殊形式：<code>.example.org</code> 可以匹配精确名称（<code>example.org</code>）和通配符名称（<code>*.example.org</code>）。</p>
+<h4 id="正则表达式名称"><a href="#正则表达式名称" class="headerlink" title="正则表达式名称"></a>正则表达式名称</h4><p>nginx 使用的正则表达式与 Perl(PCRE) 兼容，。要使用正则表达式，必须以波浪号开头：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server_name  ~^www\d+\.example\.net$;</span><br></pre></td></tr></table></figure>
+<p>否则会被视为精确名称，带星号则是为通配符名称（估计还会被视为无效）。<br>而且要记得加上 <code>^</code> 和 <code>$</code> 锚点。以及将域名点用反斜杠转义。<br>包含大括号字符的正则表达式必须用引号括起来：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server_name  &quot;~^(?&lt;name&gt;\w\d&#123;1,3&#125;+)\.example\.net$&quot;;</span><br></pre></td></tr></table></figure>
+<p>否则 nginx 将无法启动，并报错：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">directive <span class="string">&quot;server_name&quot;</span> is not terminated by <span class="string">&quot;;&quot;</span> <span class="keyword">in</span> ...</span><br></pre></td></tr></table></figure>
+<p>server {<br>    server_name   ~^(www.)?(?<domain>.+)$;</p>
+<pre><code>location / {
+    root   /sites/$domain;
+}
+</code></pre>
+<p>}</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">如果不懂正则的话，这里看着会有点懵。展开`~^(www\.)?(?&lt;domain&gt;.+)$`解释一下：</span><br><span class="line"></span><br><span class="line">- `~`：开头的波浪号，告诉 Nginx 这是一个正则表达式，不是普通域名</span><br><span class="line">- `^`：匹配字符串的开头</span><br><span class="line">- `(www\.)?`：普通捕获组（没有名字），匹配可选的 www. 前缀</span><br><span class="line">    - `?` 表示前面的内容出现 0 次或 1 次</span><br><span class="line">- `(?&lt;domain&gt;.+)`：命名捕获组（这就是你问的核心）</span><br><span class="line">    - `?`&lt;domain&gt;：给这个捕获组起名字叫 domain</span><br><span class="line">    - `.+`：匹配任意字符（除了换行符）一次或多次，也就是整个域名去掉 www. 之后的部分</span><br><span class="line">- `$`：匹配字符串的结尾</span><br><span class="line"></span><br><span class="line">所以 `$domain` 将是 `www.` 之后的全部内容（URI，不含标签）。</span><br><span class="line"></span><br><span class="line">PCRE 库支持一下三种命名捕获语法：</span><br><span class="line">| 语法 | 说明 |</span><br><span class="line">| :---: | :---: |</span><br><span class="line">| `?&lt;name&gt;` | Perl5.10 兼容语法，自 PCRE-7.0 起支持 |</span><br><span class="line">| `?&#x27;name` | Perl5.10 兼容语法，自 PCRE-7.0 起支持 |</span><br><span class="line">| `?P&lt;name&gt;` | Python 兼容语法，自 PCRE-4.0 起支持 |</span><br><span class="line"></span><br><span class="line">如果 nginx 无法启动并报错：</span><br><span class="line">```bash</span><br><span class="line">pcre_compile() failed: unrecognized character after (?&lt; in ...</span><br></pre></td></tr></table></figure>
+<p>那就说明 PCRE 库版本太久，应尝试 <code>?P&lt;name&gt;</code> 语法。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>HT
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://haitao-lian.github.io/2026/05/18/nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA/" title="nginx学习笔记——虚拟主机">http://haitao-lian.github.io/2026/05/18/nginx学习笔记——虚拟主机/</a>
+  </li>
+  <li class="post-copyright-license">
+      <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="followme">
+  <span>欢迎关注我的其它发布渠道</span>
+
+  <div class="social-list">
+
+      <div class="social-item">
+          <span class="social-link">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </span>
+
+          <img class="social-item-img" src="/images/wechat_channel.png">
+      </div>
+  </div>
+</div>
+
+          <div class="post-tags">
+              <a href="/tags/nginx/" rel="tag"><i class="fa fa-tag"></i> nginx</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2026/05/15/nginx%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E2%80%94%E2%80%94Beginners-guide/" rel="prev" title="nginx学习笔记——Beginners_guide">
+                  <i class="fa fa-angle-left"></i> nginx学习笔记——Beginners_guide
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-dumbbell"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">HT</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/mist/" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
